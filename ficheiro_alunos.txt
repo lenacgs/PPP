@@ -1,0 +1,7 @@
+2016226726,informatica,2014,estudante
+2016226727,informatica,2016,estudante
+2016226728,informatica,2015,estudante
+2016226729,informatica,2016,estudante
+2016226730,informatica,2013,estudante
+2016226731,informatica,2016,estudante
+2016226732,informatica,2016,estudante
