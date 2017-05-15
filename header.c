@@ -22,7 +22,7 @@ typedef struct node_aluno {
   char *curso;
   int ano_mat;
   char *regime;
-  Next_ptrs_exame inscricoes;
+  Next_ptrs_exame *inscricoes;
   Next_aluno next;
 } Node_aluno;
 
@@ -35,7 +35,7 @@ typedef struct node_exame{
   Hora hora;
   int duracao;
   char *sala;
-  Next_ptrs_aluno inscritos;    //ponteiro para lista de ponteiros
+  Next_ptrs_aluno *inscritos;    //ponteiro para lista de ponteiros
   Next_exame next;
 } Node_exame;
 
@@ -63,7 +63,7 @@ typedef struct ptrs_aluno *Next_ptrs_aluno;
 typedef struct ptrs_aluno {
   Ptr_aluno aluno;
   Next_ptrs_aluno next;
-}Node_ptrs_aluno;
+} Node_ptrs_aluno;
 
 void imprime_num_aluno(Node_aluno lista);
 void inscreve_aluno(Node_exame exame, /*lista de alunos em memoria (l)*/);
