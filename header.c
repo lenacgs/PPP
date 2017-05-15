@@ -29,7 +29,7 @@ typedef struct node_aluno {
 //Lista de exames
 typedef struct node_exame *Next_exame;
 typedef struct node_exame{
-  Node_disciplina *disciplina;
+  Next_disciplina disciplina;
   char *epoca;
   Data data;
   Hora hora;
