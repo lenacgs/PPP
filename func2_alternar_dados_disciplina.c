@@ -1,4 +1,4 @@
-void alterar_dados_disciplina(List lista_disciplinas) {
+void altera_dados_disciplina(List lista_disciplinas) {
   int opcao, novo_num, novo_ano, len;
   char c, *p_nome, *p_docente, string[50];
   Next_disciplina l, disciplina, ant, actual;
