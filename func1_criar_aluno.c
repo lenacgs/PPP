@@ -1,6 +1,6 @@
 // * -> * -> *
 
-void criar_aluno(Next_aluno lista_alunos) {
+void cria_aluno(Next_aluno lista_alunos) {
     char *p_curso, *p_regime, string [50];
     int len;
     Next_aluno aluno;
@@ -27,5 +27,5 @@ void criar_aluno(Next_aluno lista_alunos) {
     len = strlen(string);
     insere_array(string, p_regime, len);
 
-    inserir_aluno(lista_alunos, aluno);
+    insere_aluno(lista_alunos, aluno);
 }
