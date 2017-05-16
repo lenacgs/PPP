@@ -65,10 +65,19 @@ typedef struct ptrs_aluno {
   Next_ptrs_aluno next;
 }Node_ptrs_aluno;
 
+
+void altera_dados_aluno(Next_aluno lista_alunos);
+void altera_dados_disciplina(List lista_disciplinas);
+void apagar_aluno (Next_aluno lista_alunos);
+int comparar_datas(Data data1, Data data2);
+void cria_aluno(Next_aluno lista_alunos);
+Next_aluno cria_lista_alunos();
+void le_ficheiro_alunos(Next_aluno *lista_alunos);
 void imprime_num_aluno(Node_aluno lista);
+void insere_aluno(Next_aluno lista_alunos, Next_aluno aluno);
 void inscreve_aluno(Node_exame exame, /*lista de alunos em memoria (l)*/);
 void insere_novo_exame(Node_exame lista_exames, Node_aluno lista_alunos, Node_disciplina lista_disciplinas); //unfinished
-void insere_array(char *string, char *p_disciplina, int len);
+void insere_array(char *string, char *p_inicial, int len);
 void imprime_exames(Node_exame lista);
 void imprime_array(char *string);
 void listar_alunos(Node_exame lista_exames);
