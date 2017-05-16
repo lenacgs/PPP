@@ -1,4 +1,4 @@
-void alterar_dados_aluno(Next_aluno lista_alunos) {
+void altera_dados_aluno(Next_aluno lista_alunos) {
   int opcao, novo_num, novo_ano, len, num, i;
   char *p_curso, *p_regime, string[50];
   Next_aluno aluno, l, ant, actual;
