@@ -10,11 +10,9 @@ void le_ficheiro_disciplinas (Next_disciplina lista_disciplinas) {
 
     novaDisciplina->nome = (char*)malloc(50*sizeof(char));
     strcpy(novaDisciplina->nome, nome);
-    printf("nome: %s\n", novaDisciplina->nome);
 
     novaDisciplina->docente = (char*)malloc(50*sizeof(char));
     fscanf(fp, "%[^,\n]", novaDisciplina->docente);
-    printf("docente: %s\n", novaDisciplina->docente);
     fseek(fp, 1, SEEK_CUR);
 
     insere_disciplina(lista_disciplinas, novaDisciplina);
