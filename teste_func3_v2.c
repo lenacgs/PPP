@@ -2,73 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "header.h"
 
-typedef struct {
-  int dia;
-  int mes;
-  int ano;
-} Data;
-
-typedef struct {
-  int horas;
-  int mins;
-} Hora;
-
-typedef struct node_disciplina *Next_disciplina;
-typedef struct node_disciplina{
-  char *nome;
-  char *docente;
-  Next_disciplina next;
-} Node_disciplina;
-
-typedef struct node_exame *Ptr_exame;
-typedef struct ptrs_exame *Next_ptrs_exame;
-typedef struct ptrs_exame {
-  Ptr_exame exame;
-  Next_ptrs_exame next;
-} Node_ptrs_exame;
-
-typedef struct node_aluno *Ptr_aluno;
-typedef struct ptrs_aluno *Next_ptrs_aluno;
-typedef struct ptrs_aluno {
-  Ptr_aluno aluno;
-  Next_ptrs_aluno next;
-} Node_ptrs_aluno;
-
-typedef struct node_aluno *Next_aluno;
-typedef struct node_aluno {
-  int num_aluno;
-  char *curso;
-  int ano_mat;
-  char *regime;
-  Next_ptrs_exame inscricoes;
-  Next_aluno next;
-} Node_aluno;
-
-typedef struct node_exame *Next_exame;
-typedef struct node_exame{
-  Next_disciplina disciplina;
-  char *epoca;
-  Data data;
-  Hora hora;
-  int duracao;
-  char *sala;
-  Next_ptrs_aluno inscritos;
-  Next_exame next;
-} Node_exame;
-
-
-void imprime_array(char *string) {
-    char *ptr, *endptr;
-    int size;
-
-    size = strlen(string);
-    endptr = string + size;
-
-    for (ptr=string; ptr<=endptr; ptr++) {
-        printf("%c", *ptr);
-    }
-}
 
 void insere_array(char *string, char *p_inicial, int len) {
   char *aux, *end, *i;
@@ -81,29 +16,24 @@ void insere_array(char *string, char *p_inicial, int len) {
   }
 }
 
-void inserir_disciplina(Next_disciplina lista_disciplinas, Next_disciplina disciplina) {
+void insere_disciplina(Next_disciplina lista_disciplinas, Next_disciplina disciplina) {
   Next_disciplina aux = lista_disciplinas;
-  Next_disciplina new;
   while (aux->next != NULL) {
     aux = aux->next;
   }
-  new = (Next_disciplina)malloc(sizeof(Node_disciplina));
-  aux->next = new;
-  new->nome = disciplina->nome;
-  new->docente = disciplina->docente;
-  new->next = NULL;
+  aux->next = disciplina;
+  disciplina->next = NULL;
 }
 
 void imprime_num_aluno(Next_aluno lista) {
-    Next_aluno aux;
-    int i;
-    aux = lista->next; /*para saltar o no cabecalho*/
-    i = 1;
-    while(aux != NULL) {
-        printf("%d. %d\n", i, aux->num_aluno);
-        i++;
-        aux = aux->next;
-    }
+  Next_aluno aux = lista->next;
+  int i=1;
+
+  while(aux != NULL) {
+    printf("%d. %d\n", i, aux->num_aluno);
+    i++;
+    aux = aux->next;
+  }
 }
 
 Next_ptrs_aluno cria_lista_inscritos() {
@@ -114,30 +44,6 @@ Next_ptrs_aluno cria_lista_inscritos() {
     aux->next = NULL;
   }
   return aux;
-}
-
-void inscreve_aluno(Next_ptrs_aluno lista_ptrs, Next_aluno lista_alunos) {
-  int i, num;
-  Next_ptrs_aluno new_node, l_inscritos = lista_ptrs;
-  Next_aluno l = lista_alunos;
-
-  getchar();
-  printf("Seleccione o aluno que pretende inscrever no exame:\n");
-  imprime_num_aluno(lista_alunos);
-  printf("Opcao: ");
-  scanf("%d", &num);
-  for (i=0; i<num; i++) {
-    l = l->next;
-  }
-
-  while(l_inscritos->next != NULL) {
-    l_inscritos = l_inscritos->next;
-  }
-
-  new_node = (Next_ptrs_aluno)malloc(sizeof(Node_ptrs_aluno));
-  l_inscritos->next = new_node;
-  new_node->aluno = l;
-  new_node->next = NULL;
 }
 
 int verifica_sala(char *sala, Next_exame lista_exames, Next_exame new_node) {
@@ -194,7 +100,7 @@ void criar_disciplina(Next_disciplina lista_disciplinas) {
     len = strlen(string);
     insere_array(string, p_docente, len);
 
-    inserir_disciplina(lista_disciplinas, disciplina);
+    insere_disciplina(lista_disciplinas, disciplina);
 }
 
 
@@ -214,15 +120,13 @@ void imprime_disciplinas(Next_disciplina lista) {
   Next_disciplina l = lista->next;
   int i=1;
   while (l != NULL) {
-    printf("%d.", i);
-    imprime_array(l->nome);
-    printf("\n");
+    printf("%d. %s\n", i, l->nome);
     i++;
     l = l->next;
   }
 }
 
-void inserir_aluno(Next_aluno lista_alunos, Next_aluno aluno) {
+void insere_aluno(Next_aluno lista_alunos, Next_aluno aluno) {
   Next_aluno aux = lista_alunos;
   while (aux->next != NULL) {
     aux = aux->next;
@@ -262,7 +166,7 @@ void criar_aluno(Next_aluno lista_alunos) {
     len = strlen(string);
     insere_array(string, p_regime, len);
 
-    inserir_aluno(lista_alunos, aluno);
+    insere_aluno(lista_alunos, aluno);
 }
 
 Next_aluno cria_lista_alunos() {
@@ -288,6 +192,35 @@ void imprime_exames(Next_exame lista) {
     printf("\nepoca: %s", l->epoca);
     l = l->next;
   }
+}
+
+void inscreve_aluno(Next_ptrs_aluno lista_ptrs, Next_aluno lista_alunos) {
+  int i, num;
+  Next_ptrs_aluno new_node, l_inscritos = lista_ptrs;
+  Next_aluno l_alunos = lista_alunos->next;
+
+  getchar();
+  printf("Seleccione o aluno que pretende inscrever no exame:\n");
+  imprime_num_aluno(lista_alunos);
+  printf("Opcao: ");
+  scanf("%d", &num);
+  for (i=1; i<num; i++) {
+    l_alunos = l_alunos->next;
+  }
+
+printf ("\nVai inscrever o aluno ->%d<-\n",l_alunos->num_aluno);
+
+  while(l_inscritos->next != NULL) {
+    l_inscritos = l_inscritos->next;
+  }
+
+  new_node = (Next_ptrs_aluno)malloc(sizeof(Node_ptrs_aluno));
+  l_inscritos->next = new_node;
+  new_node->aluno = l_alunos;
+  new_node->next = NULL;
+
+  printf ("\nInscreveu ->%d<-\n",new_node->aluno->num_aluno);
+
 }
 
 void criar_exame(Next_exame lista_exames, Next_aluno lista_alunos, Next_disciplina lista_disciplinas) {
@@ -345,26 +278,33 @@ void criar_exame(Next_exame lista_exames, Next_aluno lista_alunos, Next_discipli
     getchar();
     printf("Quantos alunos quer inscrever?: ");
     scanf("%d", &num);
+    lista_exames->inscritos = cria_lista_inscritos();
     for (i=1; i<=num; i++) {
-        inscreve_aluno(lista_exames->inscritos, lista_alunos);
+      inscreve_aluno(lista_exames->inscritos, lista_alunos);
+      printf("Ola");
     }
+
+    imprime_num_aluno(lista_exames->inscritos->aluno);
+    //while (lista_exames->inscritos != NULL) {
+    //  printf("%d", lista_exames->inscritos->aluno->num_aluno);
+    //}
 }
 
 Next_exame cria_lista_exames() {
     Next_exame aux;
     aux = (Next_exame)malloc(sizeof(Node_exame));
     if (aux != NULL) {
-        aux->disciplina = NULL;
-        aux->epoca = NULL;
-        aux->data.dia = 0;
-        aux->data.mes = 0;
-        aux->data.ano = 0;
-        aux->hora.horas = 0;
-        aux->hora.mins = 0;
-        aux->duracao = 0;
-        aux->sala = NULL;
-        aux->inscritos = NULL;
-        aux->next = NULL;
+      aux->disciplina = NULL;
+      aux->epoca = NULL;
+      aux->data.dia = 0;
+      aux->data.mes = 0;
+      aux->data.ano = 0;
+      aux->hora.horas = 0;
+      aux->hora.mins = 0;
+      aux->duracao = 0;
+      aux->sala = NULL;
+      aux->inscritos = NULL;
+      aux->next = NULL;
     }
     return aux;
 }
@@ -400,7 +340,6 @@ int main() {
   imprime_disciplinas(lista_disciplinas);
 
   lista_exames = cria_lista_exames();
-  lista_inscritos = cria_lista_inscritos();
   printf("\nQuantos exames quer criar? ");
   scanf("%d", &n);
 
