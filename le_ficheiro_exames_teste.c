@@ -61,7 +61,7 @@ Next_aluno cria_lista_alunos() {
     return aux;
 }
 
-void le_ficheiro_alunos(Next_aluno lista_alunos) {
+void le_ficheiro_alunos(Next_aluno lista_alunos, Next_exame lista_exames) {
   FILE * fp;
   Next_aluno novoAluno;
   fp = fopen("ficheiro_alunos.txt", "r");
@@ -156,25 +156,33 @@ Next_ptrs_aluno cria_lista_inscritos() {
 void le_ficheiro_exames(Next_exame lista_exames, Next_disciplina lista_disciplinas, Next_aluno lista_alunos) {
   FILE *fp;
   Next_exame novoExame;
-  Next_disciplina l_disciplinas = lista_disciplinas;
+  Next_disciplina l_disciplinas = lista_disciplinas->next;
   Next_aluno l_alunos = lista_alunos;
   Next_ptrs_aluno lista_inscritos, l_inscritos;
   fp = fopen("ficheiro_exames.txt", "r");
-  char disciplina[100], c, string[100];
-  int i, num, id;
+  char disciplina[100], c, string[100], id[100];
+  int i, num;
 
+
+  if (fp == NULL) {
+    printf("Nao conseguiu abrir o ficheiro ->\"ficheiro_exames.txt\"<- \\\n");
+    return;
+  }
+
+printf("Conseguiu abrir o ficheiro ->\"ficheiro_exames.txt\"<- \\\n");
   printf("leitura da lista de exames: \n");
 
-  while(fscanf(fp, "%d[^,]", &id) != EOF) {
-    printf("ola");
+  while(fscanf(fp, "%[^,]", id) != EOF) {
+    printf("ola\n");
     novoExame = (Next_exame)malloc(sizeof(Node_exame));
     fseek (fp, 1, SEEK_CUR);
-    novoExame->id = id;
+    novoExame->id = atoi(id);
 
     novoExame->disciplina = (Next_disciplina)malloc(sizeof(Node_disciplina));
     fscanf(fp, "%[^,]", disciplina);
 
     while (l_disciplinas != NULL) {
+      printf("Compara com %s\n",l_disciplinas->nome );
       if (strcmp(l_disciplinas->nome, disciplina) == 0) {
         novoExame->disciplina = l_disciplinas;
       }
@@ -237,7 +245,7 @@ int main() {
   Next_aluno lista_alunos = cria_lista_alunos();
 
   le_ficheiro_disciplinas(lista_disciplinas);
-  le_ficheiro_alunos(lista_alunos);
+  le_ficheiro_alunos(lista_alunos, lista_exames);
   le_ficheiro_exames(lista_exames, lista_disciplinas, lista_alunos);
   printf("impressao final: \n");
   imprime_exames(lista_exames);
