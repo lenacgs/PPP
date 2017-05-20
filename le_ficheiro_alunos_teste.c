@@ -50,10 +50,10 @@ void imprime_num_aluno(Next_aluno lista) {
 
 void insere_aluno(Next_aluno lista_alunos, Next_aluno aluno) {
   Next_aluno aux = lista_alunos;
-  Next_exame l_exames;
   while (aux->next != NULL) {
     aux = aux->next;
   }
+
   aux->next = aluno;
   aluno->next = NULL;
 }
@@ -126,6 +126,7 @@ void le_ficheiro_alunos(Next_aluno lista_alunos, Next_exame lista_exames) {
       printf( "exame %s\n", exame);
       exame = strtok(NULL, s);
    }
+   insere_aluno(lista_alunos, novoAluno);
   }
   fclose(fp);
 }
