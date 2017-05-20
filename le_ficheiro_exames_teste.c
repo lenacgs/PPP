@@ -265,6 +265,7 @@ printf("Conseguiu abrir o ficheiro ->\"ficheiro_exames.txt\"<- \\\n");
       printf( "aluno inscrito: %d\n", num_aluno);
       numero = strtok(NULL, s);
     }
+    insere_exame(lista_exames, novoExame);
   }
   fclose(fp);
 }
