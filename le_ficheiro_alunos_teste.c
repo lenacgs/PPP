@@ -71,17 +71,17 @@ void le_ficheiro_alunos(Next_aluno lista_alunos, Next_exame lista_exames) {
   FILE * fp;
   Next_aluno novoAluno;
   Next_exame l_exames;
-  int i, id;
+  int i, id, num_exame;
   Next_ptrs_exame lista_inscricoes, l_inscricoes;
   fp = fopen("ficheiro_alunos.txt", "r");
-  char num[100], c, string[100];
+  char num[100], c, string[200], s[2] = ",", *exame;
 
   while (fscanf(fp, "%[^,]", num) != EOF) {
     printf("NOVO ALUNO:\n");
     fseek(fp, 1, SEEK_CUR);
     novoAluno = (Next_aluno)malloc(sizeof(Node_aluno));
 
-    printf("%s\n", num);
+    /*printf("%s\n", num);*/
     novoAluno->num_aluno = atoi(num);
     printf("num: %d\n", novoAluno->num_aluno);
 
@@ -104,54 +104,28 @@ void le_ficheiro_alunos(Next_aluno lista_alunos, Next_exame lista_exames) {
     l_exames = lista_exames;
     lista_inscricoes = cria_lista_inscricoes();
     l_inscricoes = lista_inscricoes;
-    c = getc(fp);
 
-    printf("---->%c<----------\n",c );
-    i=0;
-    while (c != '\n') {
-      if (c != ',') {
-        string[i] = c;
-        i++;
+    fscanf(fp, "%[^\n]", string);
+
+    exame = strtok(string, s);
+    num_exame = atoi(exame);
+    while( exame != NULL ) {
+      num_exame = atoi(exame);
+      while (l_exames->next != NULL) {
+        if  (l_exames->id == num_exame) {
+          while (l_inscricoes->next != NULL) {
+            l_inscricoes = l_inscricoes->next;
+          }
+          l_inscricoes->next = (Next_ptrs_exame)malloc(sizeof(Node_ptrs_exame));
+          l_inscricoes->next->exame = l_exames;
+          printf("%d", l_inscricoes->next->exame->id);
+          l_inscricoes->next->next = NULL;
+        }
+        l_exames = l_exames->next;
       }
-      else if (c == '\n') {
-                string[i] = '\0';
-                id = atoi(string);
-                printf("id2: %d", id);
-                while (l_exames->next != NULL) {
-                  if  (l_exames->id == id) {
-                    while (l_inscricoes->next != NULL) {
-                      l_inscricoes = l_inscricoes->next;
-                    }
-                    l_inscricoes->next = (Next_ptrs_exame)malloc(sizeof(Node_ptrs_exame));
-                    l_inscricoes->next->exame = l_exames;
-                    l_inscricoes->next->next = NULL;
-                  }
-                  l_exames = l_exames->next;
-                }
-              }
-              else  {
-                string[i] = '\0';
-                id = atoi(string);
-                printf("id1: %d\n", id);
-                while (l_exames->next != NULL) {
-                  if  (l_exames->id == id) {
-                    while (l_inscricoes->next != NULL) {
-                      l_inscricoes = l_inscricoes->next;
-                    }
-                    l_inscricoes->next = (Next_ptrs_exame)malloc(sizeof(Node_ptrs_exame));
-                    l_inscricoes->next->exame = l_exames;
-                    l_inscricoes->next->next = NULL;
-                    printf("idfinal: %d", l_inscricoes->next->exame->id);
-                  }
-                  l_exames = l_exames->next;
-                }
-                i=0;
-              }
-      c = getc(fp);
-    }
-
-    insere_aluno(lista_alunos, novoAluno);
-
+      printf( "exame %s\n", exame);
+      exame = strtok(NULL, s);
+   }
   }
   fclose(fp);
 }
