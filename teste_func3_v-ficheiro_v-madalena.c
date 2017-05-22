@@ -22,6 +22,7 @@ Next_ptrs_exame cria_lista_inscricoes() {
   }
   return aux;
 }
+
 void insere_array(char *string, char *p_inicial, int len) {
   char *aux, *end, *i;
   int j=0;
@@ -104,6 +105,8 @@ void le_ficheiro_alunos(Next_aluno lista_alunos, Next_exame lista_exames) {
     printf("%s\n", novoAluno->regime);
     fseek(fp, 1, SEEK_CUR);
 
+    fscanf(fp, "%[^\n]", string);
+
    insere_aluno(lista_alunos, novoAluno);
   }
   fclose(fp);
@@ -124,66 +127,62 @@ void le_ficheiro_inscricoes(Next_aluno lista_alunos, Next_exame lista_exames) {
     //ciclo para ler os 4 primeiros parâmetros de uma linha (não interessam para as inscrições)
     for (i=0; i<4; i++) {
       fscanf(fp, "%[^,]", lixo);
+      fseek(fp, 1, SEEK_CUR);
     }
 
     lista_inscricoes = cria_lista_inscricoes();
-    l_inscricoes = lista_inscricoes->next;
+    l_inscricoes = lista_inscricoes;
 
     fscanf(fp, "%[^\n]", string);
 
-    exame = (char*)malloc(100*sizeof(char));
     exame = strtok(string, s);
     num_exame = atoi(exame);
     while( exame != NULL ) {
+      printf("EXAME: %s\n", exame);
       num_exame = atoi(exame);
+      l_exames = lista_exames->next;
+
       while (l_exames->next != NULL) {
         if  (l_exames->id == num_exame) {
-          while (l_inscricoes->next != NULL) {
+          while (l_inscricoes->next != NULL) { //para verificar se a segunda condição está
             l_inscricoes = l_inscricoes->next;
           }
           l_inscricoes->next = (Next_ptrs_exame)malloc(sizeof(Node_ptrs_exame));
           l_inscricoes->next->exame = l_exames;
-          printf("%d", l_inscricoes->next->exame->id);
           l_inscricoes->next->next = NULL;
         }
         l_exames = l_exames->next;
       }
-      printf( "exame %s\n", exame);
       exame = strtok(NULL, s);
    }
-
   }
 }
 
 
 int verifica_sala(char *string, Next_exame lista_exames, Next_exame new_node) {
-  int inicio, fim, inicio_nova, fim_nova;
+  int inicio, fim, inicio_nova, fim_nova, res;
   Next_exame l = lista_exames->next;
-  while (l != NULL) {
-    printf("sala: %s\n", string);
-    if ((strcmp(string, l->sala)==0) && (l->data.dia == new_node->data.dia) && (l->data.mes == new_node->data.mes) && (l->data.ano == new_node->data.ano)) {
-      inicio = (l->hora.horas)* 60 + (l->hora.mins);
-      fim = inicio + l->duracao;
 
-      inicio_nova = (new_node->hora.horas)*60 + (new_node->hora.mins);
-      fim_nova = inicio_nova + new_node->duracao;
-
-      if (inicio_nova>inicio && inicio_nova<fim) {
-        return 0;
+  while (l->next != NULL) {
+    inicio = (l->hora.horas)* 60 + (l->hora.mins);
+    fim = inicio + l->duracao;
+    inicio_nova = (new_node->hora.horas)*60 + (new_node->hora.mins);
+    fim_nova = inicio_nova + new_node->duracao;
+    //a sala ser igual
+    if (strcmp(string, l->sala)==0) {
+      //a data ser igual
+      if ((l->data.dia == new_node->data.dia) && (l->data.mes == new_node->data.mes) && (l->data.ano == new_node->data.ano)) {
+        //a hora coincidir
+        if ((inicio_nova>inicio && inicio_nova<fim) || (fim_nova>inicio && fim_nova<fim) || (inicio_nova<inicio && fim_nova>fim)) {
+          return 0;
+        }
+        else l = l->next;
       }
-      if (fim_nova>inicio && fim_nova<fim) {
-        return 0;
-      }
-      if (inicio_nova<inicio && fim_nova>fim) {
-        return 0;
-      }
-      else {
-        return 1;
-      }
+      else l = l->next;
     }
-  l = l->next;
+    else l = l->next;
+    l = l->next;
   }
-  return 1;
 }
 
 
@@ -247,6 +246,7 @@ printf("Conseguiu abrir o ficheiro ->\"ficheiro_exames.txt\"<- \\\n");
     novoExame = (Next_exame)malloc(sizeof(Node_exame));
     fseek (fp, 1, SEEK_CUR);
     novoExame->id = atoi(id);
+    printf("Id: %d\n", novoExame->id);
 
     novoExame->disciplina = (Next_disciplina)malloc(sizeof(Node_disciplina));
     fscanf(fp, "%[^,]", disciplina);
@@ -300,7 +300,6 @@ printf("Conseguiu abrir o ficheiro ->\"ficheiro_exames.txt\"<- \\\n");
           }
           l_inscritos->next = (Next_ptrs_aluno)malloc(sizeof(Node_ptrs_aluno));
           l_inscritos->next->aluno = l_alunos;
-          printf("%d", l_inscritos->next->aluno->num_aluno);
           l_inscritos->next->next = NULL;
         }
         l_alunos = l_alunos->next;
@@ -385,8 +384,11 @@ void cria_exame(Next_exame lista_exames, Next_aluno lista_alunos, Next_disciplin
     int i, num;
     Next_ptrs_aluno l_inscritos;
     Next_disciplina l_disciplinas = lista_disciplinas->next; /*este next e super importante*/
-    Next_exame exame;
+    Next_exame exame, l_exames = lista_exames->next;
     exame = (Next_exame)malloc(sizeof(Node_exame));
+
+    printf("ID: ");
+    scanf("%d", &(exame->id));
 
     exame->disciplina = (Next_disciplina)malloc(sizeof(Node_disciplina));
     printf("Disciplina: ");
@@ -423,14 +425,15 @@ void cria_exame(Next_exame lista_exames, Next_aluno lista_alunos, Next_disciplin
 
     printf("Sala: ");
     scanf("%s", string);
-    printf("sala: %s\n", string);
 
     res = verifica_sala(string, lista_exames, exame);
-    printf("res %d", res);
-    if (res == 1)
-      strcpy(exame->sala, string);
-    else
-        printf("A sala nao esta disponivel.");
+    while (res != 1) {
+      getchar();
+      printf("\nA sala nao esta disponivel. Escolha outra sala: ");
+      scanf("%s", string);
+      res = verifica_sala(string, lista_exames, exame);
+    }
+    strcpy(exame->sala, string);
 
     getchar();
     printf("Quantos alunos quer inscrever?: ");
