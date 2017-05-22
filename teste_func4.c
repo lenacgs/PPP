@@ -1,4 +1,4 @@
-//funcao para testar a func4
+//funcao para testar a func4. ja esta a funcionar
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -347,7 +347,7 @@ int comparar_datas(Data data1, Data data2) {
 
 void apagar_exames(Next_exame lista_exames) {
   Data data_presente, data_exame;
-  Next_exame l_exames = lista_exames->next, ant, actual;
+  Next_exame l_exames, ant, actual;
   int res;
 
   printf("Qual é o dia de hoje?:\nDia: ");
@@ -356,18 +356,20 @@ void apagar_exames(Next_exame lista_exames) {
   scanf("%d", &(data_presente.mes));
   printf("Ano: ");
   scanf("%d", &(data_presente.ano));
-  //esta parte esta mal
-  while(l_exames != NULL) {
-    ant = l_exames;
-    actual = l_exames->next;
-    printf("Data do exame actual: %d-%d-%d\n", l_exames->data.dia, l_exames->data.mes, l_exames->data.ano);
-    res = comparar_datas(data_presente, l_exames->data);
+
+  l_exames = lista_exames;
+  ant = l_exames;
+  actual = l_exames->next;
+  while(actual != NULL) {
+    printf("Data do exame actual: %d-%d-%d\n", actual->data.dia, actual->data.mes, actual->data.ano);
+    res = comparar_datas(data_presente, actual->data);
     printf("res: %d\n", res);
     if (res == 1) {
       ant->next = actual->next;
       free(actual);
     }
-    l_exames = l_exames->next;
+    ant = ant->next;
+    actual = actual->next;
   }
 }
 
