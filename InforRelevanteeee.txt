@@ -13,3 +13,8 @@ NOTA: sempre que alterarmos alguma coisa numa func ter atenção para mudar tamb
 Problemas que precisam de ser resolvidos:
 - a teste_func4 (temp) que serve para apagar os exames está com um problema a apagar os exames. 
 quando queremos apagar o último da lista ela não funciona
+
+Funcs que ainda não foram mexidas so far:
+- func6
+- func8
+- func9
