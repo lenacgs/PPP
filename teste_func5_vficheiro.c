@@ -190,13 +190,11 @@ void le_ficheiro_exames(Next_exame lista_exames, Next_disciplina lista_disciplin
     printf("Disciplina: %s\n", disciplina);
 
     while (l_disciplinas != NULL) {
-      printf("Compara a disciplina com %s\n",l_disciplinas->nome );
       if (strcmp(l_disciplinas->nome, disciplina) == 0) {
         novoExame->disciplina = l_disciplinas;
       }
       l_disciplinas = l_disciplinas->next;
     }
-    printf("Disciplina final: %s\n", novoExame->disciplina->nome);
     fseek(fp, 1, SEEK_CUR);
 
     novoExame->epoca = (char*)malloc(50*sizeof(char));
@@ -211,6 +209,12 @@ void le_ficheiro_exames(Next_exame lista_exames, Next_disciplina lista_disciplin
     fscanf(fp, "%d[^,\n]", &(novoExame->data.ano));
     fseek(fp, 1, SEEK_CUR);
     printf("data: %d.%d.%d\n", novoExame->data.dia, novoExame->data.mes, novoExame->data.ano);
+
+    fscanf(fp, "%d[^,\n]", &(novoExame->hora.horas));
+    fseek(fp, 1, SEEK_CUR);
+    fscanf(fp, "%d[^,\n]", &(novoExame->hora.mins));
+    fseek(fp, 1, SEEK_CUR);
+    printf("horas: %dh %dmin\n", novoExame->hora.horas, novoExame->hora.mins);
 
     fscanf(fp, "%d[^,\n]", &(novoExame->duracao));
     fseek(fp, 1, SEEK_CUR);
@@ -231,22 +235,16 @@ void le_ficheiro_exames(Next_exame lista_exames, Next_disciplina lista_disciplin
     num = atoi(numero);
     while(numero != NULL ) {
       num = atoi(numero);
-      //printf("Numero a comparar: %d\n", num); //numero do aluno inscrito no exame
       l_alunos = lista_alunos->next;
       while (l_alunos != NULL) {
-        //printf("Num_aluno na lista: %d\n", l_alunos->num_aluno); //numero do aluno que esta na lista de alunos
         if  (l_alunos->num_aluno == num) {
-          //printf("Entrou no if.\n");
-          while (l_inscritos->next != NULL) { //nao entra neste while
-            //printf("Entra no while.\n");
+          while (l_inscritos->next != NULL) {
             l_inscritos = l_inscritos->next;
           }
-          //printf("Sai do while\n");
           new_node = (Next_ptrs_aluno)malloc(sizeof(Node_ptrs_aluno));
           l_inscritos->next = new_node;
           new_node->aluno = l_alunos;
           new_node->next = NULL;
-          //printf("Aluno inscrito: %d\n", new_node->aluno->num_aluno);
         }
         l_alunos = l_alunos->next;
       }
@@ -303,7 +301,6 @@ void le_ficheiro_inscricoes(Next_aluno lista_alunos, Next_exame lista_exames) {
    }
   }
 }
-
 void imprimir_exames(Next_exame lista) {
   Next_exame l, ant, actual;
   int i=1, c;
