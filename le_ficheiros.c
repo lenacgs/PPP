@@ -74,10 +74,9 @@ void le_ficheiro_exames(Next_exame lista_exames, Next_disciplina lista_disciplin
     return;
   }
 
-printf("Conseguiu abrir o ficheiro ->\"ficheiro_exames.txt\"<- \\\n");
-  printf("leitura da lista de exames: \n");
+  printf("LEITURA DA LISTA DE EXAMES: \n");
 
-  while(fscanf(fp, "%[^,]", id) != EOF) {
+  while(fscanf(fp, " %[^,]", id) != EOF) {
     l_disciplinas = lista_disciplinas->next;
 
     novoExame = (Next_exame)malloc(sizeof(Node_exame));
@@ -90,7 +89,7 @@ printf("Conseguiu abrir o ficheiro ->\"ficheiro_exames.txt\"<- \\\n");
     printf("Disciplina: %s\n", disciplina);
 
     while (l_disciplinas != NULL) {
-      printf("Compara a disciplina com %s\n",l_disciplinas->nome );
+
       if (strcmp(l_disciplinas->nome, disciplina) == 0) {
         novoExame->disciplina = l_disciplinas;
       }
@@ -111,6 +110,12 @@ printf("Conseguiu abrir o ficheiro ->\"ficheiro_exames.txt\"<- \\\n");
     fscanf(fp, "%d[^,\n]", &(novoExame->data.ano));
     fseek(fp, 1, SEEK_CUR);
     printf("data: %d.%d.%d\n", novoExame->data.dia, novoExame->data.mes, novoExame->data.ano);
+
+    fscanf(fp, "%d[^,\n]", &(novoExame->hora.horas));
+    fseek(fp, 1, SEEK_CUR);
+    fscanf(fp, "%d[^,\n]", &(novoExame->hora.mins));
+    fseek(fp, 1, SEEK_CUR);
+    printf("horas: %dh %dmin\n", novoExame->hora.horas, novoExame->hora.mins);
 
     fscanf(fp, "%d[^,\n]", &(novoExame->duracao));
     fseek(fp, 1, SEEK_CUR);
@@ -148,6 +153,7 @@ printf("Conseguiu abrir o ficheiro ->\"ficheiro_exames.txt\"<- \\\n");
   }
   fclose(fp);
 }
+
 
 void le_ficheiro_inscricoes(Next_aluno lista_alunos, Next_exame lista_exames) {
   FILE *fp;
