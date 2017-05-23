@@ -1,3 +1,5 @@
+//acho que que o le_ficheiro_inscricoes esta mal
+
 void le_ficheiro_disciplinas (Next_disciplina lista_disciplinas) {
   FILE *fp;
   Next_disciplina novaDisciplina;
