@@ -140,11 +140,6 @@ void insere_aluno(Next_aluno lista_alunos, Next_aluno aluno) {
     aux = aux->next;
   }
   aux->next = aluno;
-  /* alternativa para o aux->next = aluno:
-  aux->num_aluno = aluno->num_aluno;
-  aux->curso = aluno->curso;
-  aux->ano_mat = aluno->ano_mat;
-  aux->regime = aluno->regime*/;
 }
 
 void criar_aluno(Next_aluno lista_alunos) {
