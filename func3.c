@@ -59,7 +59,7 @@ void cria_exame(Next_exame lista_exames, Next_aluno lista_alunos, Next_disciplin
     getchar();
     printf("Quantos alunos quer inscrever?: ");
     scanf("%d", &num);
-    lista_exames->inscritos = cria_lista_inscritos();
+    exame->inscritos = cria_lista_inscritos();
     for (i=1; i<=num; i++) {
       inscreve_aluno(lista_exames->inscritos, lista_alunos);
 
