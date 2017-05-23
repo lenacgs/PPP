@@ -1,6 +1,6 @@
 //função 5 - listar exames. oq eu falta acabar?? diz unfinished
 
-void imprimir_exames(Next_exame lista) {
+void listar_exames(Next_exame lista) {
   Next_exame l;
   int i=1, c;
   char *ptr, *disc, *ep, *doc;
