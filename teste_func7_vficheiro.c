@@ -231,22 +231,16 @@ void le_ficheiro_exames(Next_exame lista_exames, Next_disciplina lista_disciplin
     num = atoi(numero);
     while(numero != NULL ) {
       num = atoi(numero);
-      //printf("Numero a comparar: %d\n", num); //numero do aluno inscrito no exame
       l_alunos = lista_alunos->next;
       while (l_alunos != NULL) {
-        //printf("Num_aluno na lista: %d\n", l_alunos->num_aluno); //numero do aluno que esta na lista de alunos
         if  (l_alunos->num_aluno == num) {
-          //printf("Entrou no if.\n");
-          while (l_inscritos->next != NULL) { //nao entra neste while
-            //printf("Entra no while.\n");
+          while (l_inscritos->next != NULL) { 
             l_inscritos = l_inscritos->next;
           }
-          //printf("Sai do while\n");
           new_node = (Next_ptrs_aluno)malloc(sizeof(Node_ptrs_aluno));
           l_inscritos->next = new_node;
           new_node->aluno = l_alunos;
           new_node->next = NULL;
-          //printf("Aluno inscrito: %d\n", new_node->aluno->num_aluno);
         }
         l_alunos = l_alunos->next;
       }
@@ -386,6 +380,7 @@ int main() {
   le_ficheiro_inscricoes(lista_alunos, lista_exames);
   printf("Lista exames:\n");
   imprime_id_exames(lista_exames);
-
+  
+  printf("Alunos inscritos no exame:\n");
   listar_alunos(lista_exames);
 }
