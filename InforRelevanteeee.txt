@@ -1,0 +1,15 @@
+Aqui devem estar todos os pormenores e etc relevantes :D
+
+Pormenores de funções maiores que já estão a funcionar:
+- FUNC7 (master)
+  - a função serve para listar os alunos num exame mas para isso temos que imprimir todos os exames para a pessoa escolher qual quer
+  - neste momento a escolha está a ser feita pelo indice da impressão, e não pelo id do exame. tem que se mudar!
+  
+- FUNC5 (master)
+  - tem o mesmo problema que a func7 no que toca a escolha dos exames, tem que ser feita pelo id
+
+NOTA: sempre que alterarmos alguma coisa numa func ter atenção para mudar também na sua teste_func!
+  
+Problemas que precisam de ser resolvidos:
+- a teste_func4 (temp) que serve para apagar os exames está com um problema a apagar os exames. 
+quando queremos apagar o último da lista ela não funciona
