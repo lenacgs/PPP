@@ -18,3 +18,8 @@ Funcs que ainda não foram mexidas so far:
 - func6
 - func8
 - func9
+
+Mudança por causa da lista de salas:
+- funcao3 para criar exame
+- funcao5 listar exames
+- le_ficheiro_exames
