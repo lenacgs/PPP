@@ -1,5 +1,3 @@
-//acho que que o le_ficheiro_inscricoes esta mal
-
 void le_ficheiro_disciplinas (Next_disciplina lista_disciplinas) {
   FILE *fp;
   Next_disciplina novaDisciplina;
@@ -31,7 +29,7 @@ void le_ficheiro_disciplinas (Next_disciplina lista_disciplinas) {
   Next_ptrs_exame lista_inscricoes, l_inscricoes;
   fp = fopen("ficheiro_alunos.txt", "r");
   char num[100], c, string[200], s[2] = ",", *exame;
-   
+
   printf("LEITURA DA LISTA DE ALUNOS:\n");
   while (fscanf(fp, " %[^,]", num) != EOF) {
     fseek(fp, 1, SEEK_CUR);
@@ -123,22 +121,26 @@ void le_ficheiro_exames(Next_exame lista_exames, Next_disciplina lista_disciplin
     fseek(fp, 1, SEEK_CUR);
     printf("DURACAO: %d\n", novoExame->duracao);
 
-    novoExame->sala = (char*)malloc(50*sizeof(char));
+    /*novoExame->sala = (char*)malloc(50*sizeof(char));
+    fscanf(fp, "%[^,\n]", id);
     fscanf(fp, "%[^,\n]", novoExame->sala);
     printf("SALA: %s\n", novoExame->sala);
-    fseek(fp, 1, SEEK_CUR);
+    fseek(fp, 1, SEEK_CUR);*/
 
-    lista_inscritos = cria_lista_inscritos();
-    l_inscritos = lista_inscritos;
+    novoExame->inscritos = cria_lista_inscritos();
+    l_inscritos = novoExame->inscritos;
 
     fscanf(fp, "%[^\n]", string);
 
+
     numero = strtok(string, s);
-    num_aluno = atoi(numero);
-    while( numero != NULL ) {
-      num_aluno = atoi(numero);
-      while (l_alunos->next != NULL) {
-        if  (l_alunos->num_aluno == num_aluno) {
+    num = atoi(numero);
+    while(numero != NULL ) {
+      num = atoi(numero);
+      printf("aluno inscrito: %d\n", num);
+      l_alunos = lista_alunos->next;
+      while (l_alunos != NULL) {
+        if  (l_alunos->num_aluno == num) {
           while (l_inscritos->next != NULL) {
             l_inscritos = l_inscritos->next;
           }
@@ -148,7 +150,6 @@ void le_ficheiro_exames(Next_exame lista_exames, Next_disciplina lista_disciplin
         }
         l_alunos = l_alunos->next;
       }
-      printf("Aluno inscrito: %d\n", num_aluno);
       numero = strtok(NULL, s);
     }
     insere_exame(lista_exames, novoExame);
@@ -162,32 +163,30 @@ void le_ficheiro_inscricoes(Next_aluno lista_alunos, Next_exame lista_exames) {
   char lixo[100], *exame, string[100], s[2]= ",";
   int num_exame, i;
   Next_exame l_exames = lista_exames->next;
-  Next_aluno l_alunos = lista_alunos;
-  Next_ptrs_exame lista_inscricoes, l_inscricoes;
+  Next_aluno l_alunos = lista_alunos->next;
+  Next_ptrs_exame l_inscricoes;
 
 
   while (fscanf(fp, " %[^,]", lixo) != EOF) {
-    l_alunos = l_alunos->next;
     //ciclo para ler os 4 primeiros parâmetros de uma linha (não interessam para as inscrições)
     for (i=0; i<4; i++) {
       fscanf(fp, "%[^,]", lixo);
       fseek(fp, 1, SEEK_CUR);
     }
 
-    lista_inscricoes = cria_lista_inscricoes();
-    l_inscricoes = lista_inscricoes;
+    l_alunos->inscricoes = cria_lista_inscricoes();
+    l_inscricoes = l_alunos->inscricoes;
+    fscanf(fp, "%[^\n]", string); //le o que sobra da linha no ficheiro, passando-a para dentro de string
 
-    fscanf(fp, "%[^\n]", string);
-
-    exame = strtok(string, s);
-    num_exame = atoi(exame);
-    while( exame != NULL ) {
+    exame = strtok(string, s); //separa o primeiro id de exame para dentro de exame
+    num_exame = atoi(exame); //converte char para int
+    while (exame != NULL) {
       num_exame = atoi(exame);
       l_exames = lista_exames->next;
 
-      while (l_exames->next != NULL) {
+      while (l_exames != NULL) {
         if  (l_exames->id == num_exame) {
-          while (l_inscricoes->next != NULL) { //para verificar se a segunda condição está
+          while (l_inscricoes->next != NULL) {
             l_inscricoes = l_inscricoes->next;
           }
           l_inscricoes->next = (Next_ptrs_exame)malloc(sizeof(Node_ptrs_exame));
@@ -198,5 +197,12 @@ void le_ficheiro_inscricoes(Next_aluno lista_alunos, Next_exame lista_exames) {
       }
       exame = strtok(NULL, s);
    }
+   l_inscricoes = l_alunos->inscricoes->next;
+   printf("LISTA DE EXAMES EM QUE O ALUNO %d ESTA INSCRITO:\n", l_alunos->num_aluno);
+   while (l_inscricoes != NULL) {
+     printf("EXAME: %d\n", l_inscricoes->exame->id);
+     l_inscricoes = l_inscricoes->next;
+   }
+   l_alunos = l_alunos->next;
   }
 }
