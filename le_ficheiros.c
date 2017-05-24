@@ -25,36 +25,34 @@ void le_ficheiro_disciplinas (Next_disciplina lista_disciplinas) {
   fclose(fp);
 }
 
-void le_ficheiro_alunos(Next_aluno lista_alunos) {
+ void le_ficheiro_alunos(Next_aluno lista_alunos) {
   FILE * fp;
   Next_aluno novoAluno;
-  Next_exame l_exames;
   int i, id, num_exame;
   Next_ptrs_exame lista_inscricoes, l_inscricoes;
   fp = fopen("ficheiro_alunos.txt", "r");
   char num[100], c, string[200], s[2] = ",", *exame;
-
-  printf("Leitura da lista de alunos:\n");
+   
+  printf("LEITURA DA LISTA DE ALUNOS:\n");
   while (fscanf(fp, " %[^,]", num) != EOF) {
     fseek(fp, 1, SEEK_CUR);
     novoAluno = (Next_aluno)malloc(sizeof(Node_aluno));
 
-    /*printf("%s\n", num);*/
     novoAluno->num_aluno = atoi(num);
-    printf("Num: %d\n", novoAluno->num_aluno);
+    printf("NUMERO DE ALUNO: %d\n", novoAluno->num_aluno);
 
     novoAluno->curso = (char*)malloc(50*sizeof(char));
     fscanf(fp, "%[^,\n]", novoAluno->curso);
-    printf("Curso:%s\n", novoAluno->curso);
+    printf("CURSO: %s\n", novoAluno->curso);
     fseek(fp, 1, SEEK_CUR);
 
     fscanf(fp, "%d[^,]", &(novoAluno->ano_mat));
-    printf("Ano: %d\n", novoAluno->ano_mat);
+    printf("ANO DE MATRICULA: %d\n", novoAluno->ano_mat);
     fseek(fp, 1, SEEK_CUR);
 
     novoAluno->regime = (char*)malloc(50*sizeof(char));
     fscanf(fp, "%[^,\n]", novoAluno->regime);
-    printf("Regime: %s\n", novoAluno->regime);
+    printf("REGIME: %s\n", novoAluno->regime);
     fseek(fp, 1, SEEK_CUR);
 
     fscanf(fp, "%[^\n]", string);
@@ -186,7 +184,6 @@ void le_ficheiro_inscricoes(Next_aluno lista_alunos, Next_exame lista_exames) {
     exame = strtok(string, s);
     num_exame = atoi(exame);
     while( exame != NULL ) {
-      printf("EXAME: %s\n", exame);
       num_exame = atoi(exame);
       l_exames = lista_exames->next;
 
