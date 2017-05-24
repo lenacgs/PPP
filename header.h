@@ -21,7 +21,7 @@ typedef struct node_sala {
   int id;
   char *sala;
   Next_sala next;
-}Node_sala;
+} Node_sala;
 
 //Lista de disciplinas
 typedef struct node_disciplina *Next_disciplina;
