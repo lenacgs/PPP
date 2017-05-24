@@ -16,6 +16,13 @@ typedef struct {
   int mins;
 } Hora;
 
+typedef struct node_sala *Next_sala;
+typedef struct node_sala {
+  int id;
+  char *sala;
+  Next_sala next;
+}Node_sala;
+
 //Lista de disciplinas
 typedef struct node_disciplina *Next_disciplina;
 typedef struct node_disciplina{
@@ -61,25 +68,25 @@ typedef struct node_exame{
   Data data;
   Hora hora;
   int duracao;
-  char *sala;
+  Next_sala sala;
   Next_ptrs_aluno inscritos;    //ponteiro para lista de ponteiros
   Next_exame next;
 } Node_exame;
 
 
-void altera_dados_aluno(Next_aluno lista_alunos);
-void altera_dados_disciplina(Next_disciplina lista_disciplinas);
-void apagar_aluno (Next_aluno lista_alunos);
-int comparar_datas(Data data1, Data data2);
-void cria_aluno(Next_aluno lista_alunos);
-Next_aluno cria_lista_alunos();
-void le_ficheiro_alunos(Next_aluno lista_alunos);
-void imprime_num_aluno(Next_aluno lista);
-void insere_aluno(Next_aluno lista_alunos, Next_aluno aluno);
-void inscreve_aluno(Next_exame exame, Next_aluno lista_alunos);
-void insere_novo_exame(Next_exame lista_exames, Next_aluno lista_alunos, Next_disciplina lista_disciplinas); //unfinished
-void insere_array(char *string, char *p_inicial, int len);
-void imprime_exames(Next_exame lista);
-void imprime_array(char *string);
-void listar_alunos(Next_exame lista_exames);
-void menu();
+//void altera_dados_aluno(Next_aluno lista_alunos);
+//void altera_dados_disciplina(Next_disciplina lista_disciplinas);
+//void apagar_aluno (Next_aluno lista_alunos);
+//int comparar_datas(Data data1, Data data2);
+//void cria_aluno(Next_aluno lista_alunos);
+//Next_aluno cria_lista_alunos();
+//void le_ficheiro_alunos(Next_aluno lista_alunos, Next_exame lista_exames);
+//void imprime_num_aluno(Next_aluno lista);
+//void insere_aluno(Next_aluno lista_alunos, Next_aluno aluno);
+//void inscreve_aluno(Next_ptrs_aluno lista_inscritos, Next_aluno lista_alunos);
+//void insere_novo_exame(Next_exame lista_exames, Next_aluno lista_alunos, Next_disciplina lista_disciplinas); //unfinished
+//void insere_array(char *string, char *p_inicial, int len);
+//void imprime_exames(Next_exame lista);
+//void imprime_array(char *string);
+//void listar_alunos(Next_exame lista_exames);
+//void menu();
