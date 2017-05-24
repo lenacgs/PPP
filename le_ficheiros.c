@@ -205,4 +205,5 @@ void le_ficheiro_inscricoes(Next_aluno lista_alunos, Next_exame lista_exames) {
    }
    l_alunos = l_alunos->next;
   }
+  fclose(fp);
 }
