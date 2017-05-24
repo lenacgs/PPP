@@ -21,11 +21,8 @@ void cria_exame(Next_exame lista_exames, Next_aluno lista_alunos, Next_disciplin
     }
 
     exame->epoca = (char*)malloc(50*sizeof(char));
-    p_epoca = exame->epoca;
     printf("Epoca: ");
-    scanf("%s", string);
-    len = strlen(string);
-    insere_array(string, p_epoca, len);
+    scanf("%s", exame->epoca);
 
     printf("Data: \nDia: ");
     scanf("%d", &(exame->data.dia));
@@ -45,7 +42,6 @@ void cria_exame(Next_exame lista_exames, Next_aluno lista_alunos, Next_disciplin
     printf("Sala: ");
     scanf("%s", string);
     exame->sala = (char*)malloc(100*sizeof(char));
-    printf("string: -%s-\n", string);
 
     res = verifica_sala(string, lista_exames, exame);
     while (res != 1) {
@@ -57,18 +53,18 @@ void cria_exame(Next_exame lista_exames, Next_aluno lista_alunos, Next_disciplin
     strcpy(exame->sala, string);
 
     getchar();
+    exame->inscritos = cria_lista_inscritos();
     printf("Quantos alunos quer inscrever?: ");
     scanf("%d", &num);
-    exame->inscritos = cria_lista_inscritos();
-    for (i=1; i<=num; i++) {
-      inscreve_aluno(lista_exames->inscritos, lista_alunos);
 
+    for (i=1; i<=num; i++) {
+      inscreve_aluno(exame->inscritos, lista_alunos);
     }
-    l_inscritos = lista_exames->inscritos->next;
+    l_inscritos = exame->inscritos->next;
+    printf("LISTA DE ALUNOS INSCRITOS:\n");
     while (l_inscritos != NULL) {
       printf("%d\n", l_inscritos->aluno->num_aluno);
       l_inscritos = l_inscritos->next;
     }
     insere_exame(lista_exames, exame);
-
 }
