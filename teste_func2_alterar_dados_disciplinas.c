@@ -59,18 +59,6 @@
       Next_exame next;
     } Node_exame;
 
-
-    void insere_array(char *string, char *p_inicial, int len) {
-      char *aux, *end, *i;
-      int j=0;
-      end = p_inicial + len - 1;
-      aux = p_inicial;
-      for (i=aux; i<end; i++) {
-        *i = *(string+j);
-        j++;
-      }
-    }
-
     void inserir_disciplina(Next_disciplina lista_disciplinas, Next_disciplina disciplina) {
       Next_disciplina aux = lista_disciplinas;
       while (aux->next != NULL) {
@@ -80,26 +68,26 @@
     }
 
     void criar_disciplina(Next_disciplina lista_disciplinas) {
-        char *p_nome, *p_docente, string[50];
-        int len;
-        Next_disciplina disciplina;
-        disciplina = (Next_disciplina)malloc(sizeof(Node_disciplina));
+        Next_disciplina novaDisciplina;
+        int n, i;
 
-        disciplina->nome = (char*)malloc(50*sizeof(char));
-        p_nome = disciplina->nome;
-        printf("Disciplina: ");
-        scanf("%s", string);
-        len = strlen(string);
-        insere_array(string, p_nome, len);
+        printf("Quantas disciplinas e que quer criar? ");
+        scanf("%d", &n);
+        for(i=1; i<=n;i++) {
+          printf("Disciplina %d:\n", i);
+          novaDisciplina = (Next_disciplina)malloc(sizeof(Node_disciplina));
 
-        disciplina->docente = (char*)malloc(50*sizeof(char));
-        p_docente = disciplina->docente;
-        printf("Nome do docente: ");
-        scanf("%s", string);
-        len = strlen(string);
-        insere_array(string, p_docente, len);
+          novaDisciplina->nome = (char*)malloc(50*sizeof(char));
+          printf("Nome da disciplina: ");
+          scanf("%s", novaDisciplina->nome);
 
-        inserir_disciplina(lista_disciplinas, disciplina);
+          novaDisciplina->docente = (char*)malloc(50*sizeof(int));
+          printf("Nome do docente: ");
+          scanf("%s", novaDisciplina->docente);
+
+          insere_disciplina(lista_disciplinas, novaDisciplina);
+          escreve_ficheiro_disciplinas(lista_disciplinas, novaDisciplina);
+        }
     }
 
     Next_disciplina cria_lista_disciplinas() {
@@ -123,40 +111,34 @@
       }
     }
 
-    void alterar_dados_disciplina(List lista_disciplinas) {
-      int opcao, novo_num, novo_ano, len;
-      char c, *p_nome, *p_docente, string[50];
-      Next_disciplina l, disciplina, ant, actual;
+    void alterar_dados_disciplina(Next_disciplina lista_disciplinas) {
+      int opcao;
+      char string[50];
+      Next_disciplina l, novaDisciplina, ant, actual;
 
-      l = lista_disciplinas;
+      l_disciplinas = lista_disciplinas;
       printf("Escolha a disciplina a qual quer alterar dados: \n");
       imprime_disciplinas(lista_disciplinas);
       scanf("%d", &num);
       for (i=0; i<num; i++) {
-        ant = l;
-        actual = l->next;
+        ant = l_disciplinas;
+        actual = l_disciplinas->next;
       }
 
-      disciplina = actual;
+      novaDisciplina = actual;
       printf("Escolha o dado que deseja alterar:\n1. Nome da disciplina\n2. Nome do docente");
       scanf("%d", &opcao);
       switch (opcao) {
         case 1:
-          disciplina->nome = (*char)malloc(50*sizeof(char));
-          p_nome = disciplina->nome;
+          novaDisciplina->nome = (*char)malloc(50*sizeof(char));
           printf("Nova disciplina: ");
-          scanf("%s", string);
-          len = strlen(string);
-          insere_array(string, p_nome, len);
+          scanf("%s", novaDisciplina->nome);
           break;
 
         case 2:
           disciplina->docente = (*char)malloc(50*sizeof(char));
-          p_docente = disciplina->docente;
           printf("Novo docente: ");
-          scanf("%s", string);
-          len = strlen(string);
-          insere_array(string, p_docente, len);
+          scanf("%s", novaDisciplina->docente);
           break;
       }
     }
