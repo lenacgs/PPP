@@ -63,8 +63,7 @@ Next_ptrs_aluno cria_lista_inscritos() {
   return aux;
 }
 
-
-
+/*
 int verifica_sala(char *string, Next_exame lista_exames, Next_exame new_node) {
   int inicio, fim, inicio_nova, fim_nova, res;
   Next_exame l = lista_exames->next;
@@ -88,7 +87,7 @@ int verifica_sala(char *string, Next_exame lista_exames, Next_exame new_node) {
   }
   return 1;
 }
-
+*/
 
 Next_disciplina cria_lista_disciplinas() {
     Next_disciplina aux;
@@ -100,6 +99,7 @@ Next_disciplina cria_lista_disciplinas() {
     }
     return aux;
 }
+
 
 void imprime_disciplinas(Next_disciplina lista) {
   Next_disciplina l = lista->next;
@@ -227,7 +227,7 @@ void cria_exame(Next_exame lista_exames, Next_aluno lista_alunos, Next_disciplin
     scanf("%d", &(exame->duracao));
 
     printf("Sala: ");
-    scanf("%s", string);
+/*    scanf("%s", string);
     exame->sala = (char*)malloc(100*sizeof(char));
 
     res = verifica_sala(string, lista_exames, exame);
@@ -237,7 +237,7 @@ void cria_exame(Next_exame lista_exames, Next_aluno lista_alunos, Next_disciplin
       scanf("%s", string);
       res = verifica_sala(string, lista_exames, exame);
     }
-    strcpy(exame->sala, string);
+    strcpy(exame->sala, string);*/
 
     getchar();
     exame->inscritos = cria_lista_inscritos();
@@ -255,6 +255,9 @@ void cria_exame(Next_exame lista_exames, Next_aluno lista_alunos, Next_disciplin
     }
     insere_exame(lista_exames, exame);
 }
+
+//acho que que o le_ficheiro_inscricoes esta mal
+
 void le_ficheiro_disciplinas (Next_disciplina lista_disciplinas) {
   FILE *fp;
   Next_disciplina novaDisciplina;
@@ -462,9 +465,7 @@ void le_ficheiro_inscricoes(Next_aluno lista_alunos, Next_exame lista_exames) {
    }
    l_alunos = l_alunos->next;
   }
-  fclose(fp);
 }
-
 
 int main() {
   Next_disciplina lista_disciplinas;
@@ -480,7 +481,7 @@ int main() {
 
   /*criar lista de alunos*/
   lista_alunos = cria_lista_alunos();
-  le_ficheiro_alunos(lista_alunos, lista_exames);
+  le_ficheiro_alunos(lista_alunos);
   printf("LEITURA DA LISTA DE ALUNOS:\n");
   imprime_num_aluno(lista_alunos);
 
