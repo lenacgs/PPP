@@ -18,7 +18,6 @@ typedef struct {
 
 typedef struct node_sala *Next_sala;
 typedef struct node_sala {
-  int id;
   char *sala;
   Next_sala next;
 } Node_sala;
@@ -68,7 +67,7 @@ typedef struct node_exame{
   Data data;
   Hora hora;
   int duracao;
-  Next_sala sala;
+  Next_sala salas;
   Next_ptrs_aluno inscritos;    //ponteiro para lista de ponteiros
   Next_exame next;
 } Node_exame;
