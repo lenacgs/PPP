@@ -78,34 +78,48 @@ void inserir_aluno(Next_aluno lista_alunos, Next_aluno aluno) {
   aux->next = aluno;
 }
 
-void criar_aluno(Next_aluno lista_alunos) {
+void criar_aluno(Next_aluno lista_alunos, Next_exame lista_exames) {
     char *p_curso, *p_regime, string [30];
-    int len;
-    Next_aluno aluno;
-    aluno = (Next_aluno)malloc(sizeof(Node_aluno));
+    int len, i, opcao;
+    Next_aluno novoAluno, l_alunos = lista_alunos;
+    Next_ptrs_exame l_inscricoes;
 
-    aluno->num_aluno = (int)malloc(30 * sizeof(int));
+    printf("Aluno %d:\n", i);
+    novoAluno = (Next_aluno)malloc(sizeof(Node_aluno));
+
+    novoAluno->num_aluno = (int)malloc(30 * sizeof(int));
     printf("Numero: ");
-    scanf("%d", &(aluno->num_aluno)); /*certo*/
+    scanf("%d", &(novoAluno->num_aluno)); /*certo*/
 
-    aluno->curso = (char*)malloc(50*sizeof(char));
-    p_curso = aluno->curso;
+    novoAluno->curso = (char*)malloc(50*sizeof(char));
     printf("Curso: ");
-    scanf("%s", string);
-    len = strlen(string);
-    insere_array(string, p_curso, len);
+    scanf("%s", novoAluno->curso);
 
     printf("Ano de matricula: ");
-    scanf("%d", &(aluno->ano_mat));
+    scanf("%d", &(novoAluno->ano_mat));
 
+    novoAluno->regime = (char*)malloc(50*sizeof(int));
     printf("Regime: ");
-    aluno->regime = (char*)malloc(50*sizeof(int));
-    p_regime = aluno->regime;
-    scanf("%s", string);
-    len = strlen(string);
-    insere_array(string, p_regime, len);
+    scanf("%s", novoAluno->regime);
 
-    inserir_aluno(lista_alunos, aluno);
+    novoAluno->inscricoes = cria_lista_inscricoes();
+    l_inscricoes = novoAluno->inscricoes;
+
+    printf("Em quantos exames quer inscrever o aluno? ");
+    scanf("%d", &opcao);
+    for(i=0; i<opcao; i++) {
+      associa_exame(l_inscricoes, lista_exames);
+    }
+    //para ter a certeza que os exames ficaram bem associados
+    l_inscricoes = novoAluno->inscricoes->next;
+    printf("LISTA DE EXAMES INSCRITOS:\n");
+    while (l_inscricoes != NULL) {
+      printf("Id: %d\n", l_inscricoes->exame->id);
+      l_inscricoes = l_inscricoes->next;
+    }
+    insere_aluno(lista_alunos, novoAluno);
+    escreve_ficheiro_alunos(lista_alunos, novoAluno);
+
 }
 
 Next_aluno cria_lista_alunos() {
@@ -164,16 +178,6 @@ int main() {
         printf("\nAluno %d:\n", i);
         criar_aluno(lista_alunos);
     }
-
-    /*l = lista_alunos;
-    printf("Escolha o aluno que quer apagar: \n");
-    imprime_num_aluno(lista_alunos);
-    scanf("%d", &num);
-    for (i=0; i<num; i++) {
-      ant = l;
-      actual = l->next;
-    }*/
-
     apagar_aluno(lista_alunos);
 
 }
