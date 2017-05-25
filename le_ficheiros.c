@@ -199,3 +199,41 @@ void le_ficheiro_inscricoes(Next_aluno lista_alunos, Next_exame lista_exames) {
   }
   fclose(fp);
 }
+
+void le_ficheiro_salas(Next_exame lista_exames) {
+  FILE *fp = fopen("ficheiro_salas.txt", "r");
+  char id[100], *sala, string[100], s[2] = ",";
+  int id_exame;
+  Next_exame l_exames = lista_exames->next;
+  Next_sala novaSala, l_salas;
+
+  printf("LEITURA DA LISTA DE SALAS:\n");
+  while (fscanf(fp, " %[^,]", id) != EOF) { //enquanto existirem linhas no ficheiro_salas, guarda o id de 1 linha para a variavel "id"
+    id_exame = atoi(id);
+    fseek(fp, 1, SEEK_CUR); //sala uma virgula
+    while (l_exames->id != id_exame) {
+      l_exames = l_exames->next;
+    }
+    //l_exames é um ponteiro para o node_exame que tem o id que procuramos
+
+    l_exames->salas = cria_lista_salas();
+    l_salas = l_exames->salas;
+    fscanf(fp, " %[^\n]", string);
+
+    sala = (char*)malloc(100*sizeof(char));
+
+    sala = strtok(string, s); //retorna NULL quando já não é possivel tokenizar mais string
+    while (sala != NULL) {
+      while(l_salas->next != NULL) {
+        l_salas = l_salas->next;
+      }
+      l_salas->next = (Next_sala)malloc(sizeof(Node_sala));
+      l_salas->next->sala = (char*)malloc(100*sizeof(char));
+      strcpy(l_salas->next->sala, sala);
+      l_salas->next->next = NULL;
+      sala = strtok(NULL, s);
+    }
+  }
+  fclose(fp);
+  printf("Leitura da lista de salas concluída.\n");
+}
