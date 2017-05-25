@@ -121,18 +121,10 @@ void le_ficheiro_exames(Next_exame lista_exames, Next_disciplina lista_disciplin
     fseek(fp, 1, SEEK_CUR);
     printf("DURACAO: %d\n", novoExame->duracao);
 
-    /*novoExame->sala = (char*)malloc(50*sizeof(char));
-    fscanf(fp, "%[^,\n]", id);
-    fscanf(fp, "%[^,\n]", novoExame->sala);
-    printf("SALA: %s\n", novoExame->sala);
-    fseek(fp, 1, SEEK_CUR);*/
-
     novoExame->inscritos = cria_lista_inscritos();
     l_inscritos = novoExame->inscritos;
 
     fscanf(fp, "%[^\n]", string);
-
-
     numero = strtok(string, s);
     num = atoi(numero);
     while(numero != NULL ) {
