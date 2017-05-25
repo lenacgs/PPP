@@ -138,46 +138,49 @@
         }
     }
 
-    void alterar_dados_aluno(List lista_alunos, Info_aluno *aluno) {
-      int opcao, novo_num, novo_ano;
-      char c, *p_curso, *p_regime;
-      printf("Escolha o dado que deseja alterar:\n1. Numero\n2. Curso\n3. Ano de matrícula\n4. Regime", );
+    void alterar_dados_aluno(Next_aluno lista_alunos) {
+      int opcao, num, i;
+      char string[50];
+      Next_aluno aluno, l, ant, actual;
+
+      l = lista_alunos;
+      printf("Escolha o aluno a quem quer alterar dados: \n");
+      imprime_num_aluno(lista_alunos);
+      scanf("%d", &num);
+      for (i=0; i<num; i++) {
+        ant = l;
+        actual = l->next;
+      }
+
+      aluno = actual;
+      printf("Escolha o dado que deseja alterar:\n1. Numero\n2. Curso\n3. Ano de matricula\n4. Regime\n");
       scanf("%d", &opcao);
       switch (opcao) {
-        case 1:
+        case 1: {
           printf("Novo numero: ");
-          (aluno->num_aluno) = novo_num;
-
-        case 2:
-          p_curso = (*char)malloc(50*sizeof(char));
-          p_curso = aluno->curso;
+          scanf("%d", &(aluno->num_aluno));
+          break;
+        }
+        case 2: {
+          aluno->curso = (char*)malloc(50*sizeof(char));
           printf("Novo curso: ");
-          /*while ((c=getchar()) != '\n') {
-            *(p_curso) = c;
-            *(p_curso++);
-          }*/
-          scanf("%s", string);
-          len = strlen(string);
-          insere_array(string, p_regime, len);
-
-        case 3:
+          scanf("%s", aluno->curso);
+          break;
+        }
+        case 3: {
           printf("Novo ano: ");
-          (aluno->ano_mat) = novo_ano;
-
-        case 4:
-          p_regime = (*char)malloc(50*sizeof(char));
-          p_regime = aluno->regime;
+          scanf("%d", &(aluno->ano_mat));
+          break;
+        }
+        case 4: {
+          aluno->regime = (char*)malloc(50*sizeof(char));
           printf("Novo regime: ");
-          scanf("%s", string);
-          len = strlen(string);
-          insere_array(string, p_regime, len);
-
-          /*while ((c=getchar()) != '\n') {
-            *(p_regime) = c;
-            *(p_regime++);
-          }*/
+          scanf("%s", aluno->regime);
+          break;
+        }
       }
-    }
+}
+
 
 
 int main() {
