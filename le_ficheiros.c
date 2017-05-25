@@ -22,7 +22,7 @@ void le_ficheiro_disciplinas (Next_disciplina lista_disciplinas) {
   fclose(fp);
 }
 
- void le_ficheiro_alunos(Next_aluno lista_alunos) {
+void le_ficheiro_alunos(Next_aluno lista_alunos) {
   FILE * fp;
   Next_aluno novoAluno;
   int i, id, num_exame;
