@@ -1,7 +1,7 @@
 int verifica_sala(char *string, Next_exame lista_exames, Next_exame new_node) {
   int inicio, fim, inicio_nova, fim_nova, res;
   Next_exame l_exames = lista_exames->next;
-  Next_sala l;;
+  Next_sala l;
 
   while (l_exames->next != NULL) {
     l = l_exames->salas;
