@@ -1,12 +1,10 @@
-void imprime_exames(Next_exame lista) {
-  Next_exame l;
+void imprime_exames(Next_exame lista_exames) {
+  Next_exame l_exames;
 
-  l = lista->next;
-  printf("LISTA DE EXAMES EXISTENTES:\n");
-  while(l != NULL) {
-    printf("\nID: %d", l->id);
-    printf("\nnNOME: %s", l->disciplina->nome);
-    printf("\nEPOCA: %s", l->epoca);
-    l = l->next;
+  l_exames = lista->next;
+  while(l_exames != NULL) {
+    printf("Id: %d, %s, %s\n", l->id, l->disciplina->nome, l->epoca);
+    l_exames = l_exames->next;
   }
 }
+
