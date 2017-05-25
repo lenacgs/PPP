@@ -92,30 +92,20 @@
       aux->next = NULL;
     }
 
-
     void criar_disciplina(Next_disciplina lista_disciplinas) {
-        char *p_nome, *p_docente, string[50];
-        int len;
-        Next_disciplina disciplina;
-        disciplina = (Next_disciplina)malloc(sizeof(Node_disciplina));
+        Next_disciplina novaDisciplina = (Next_disciplina)malloc(sizeof(Node_disciplina));
 
-        disciplina->nome = (char*)malloc(50*sizeof(char));
-        p_nome = disciplina->nome;
-        printf("Disciplina: ");
-        scanf("%s", string);
-        len = strlen(string);
-        insere_array(string, p_nome, len);
+        novaDisciplina->nome = (char*)malloc(50*sizeof(char));
+        printf("Nome da disciplina: ");
+        scanf("%s", novaDisciplina->nome);
 
-        disciplina->docente = (char*)malloc(50*sizeof(char));
-        p_docente = disciplina->docente;
+        novaDisciplina->docente = (char*)malloc(50*sizeof(int));
         printf("Nome do docente: ");
-        scanf("%s", string);
-        len = strlen(string);
-        insere_array(string, p_docente, len);
+        scanf("%s", novaDisciplina->docente);
 
-        inserir_disciplina(lista_disciplinas, disciplina);
+        insere_disciplina(lista_disciplinas, novaDisciplina);
+        escreve_ficheiro_disciplinas(lista_disciplinas, novaDisciplina);
     }
-
 
     Next_disciplina cria_lista_disciplinas() {
         Next_disciplina aux;
