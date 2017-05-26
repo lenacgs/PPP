@@ -111,36 +111,46 @@
       }
     }
 
+    void update_ficheiro_disciplinas(Next_disciplina lista_disciplinas) {
+      Next_disciplina l_disciplinas = lista_disciplinas->next;
+      FILE *fp = fopen("ficheiro_disciplinas.txt", "w");
+      while (l_disciplinas != NULL) {
+        fprintf(fp, "%s,%s\n", l_disciplinas->nome, l_disciplinas->docente);
+        l_disciplinas = l_disciplinas->next;
+      }
+      fclose(fp);
+    }
+
     void alterar_dados_disciplina(Next_disciplina lista_disciplinas) {
-      int opcao;
-      char string[50];
-      Next_disciplina l, novaDisciplina, ant, actual;
+      int opcao, i, num;
+      Next_disciplina l_disciplinas, disciplina;
 
       l_disciplinas = lista_disciplinas;
       printf("Escolha a disciplina a qual quer alterar dados: \n");
       imprime_disciplinas(lista_disciplinas);
+      printf("Opcao: ");
       scanf("%d", &num);
       for (i=0; i<num; i++) {
-        ant = l_disciplinas;
-        actual = l_disciplinas->next;
+        l_disciplinas = l_disciplinas->next;
       }
-
-      novaDisciplina = actual;
-      printf("Escolha o dado que deseja alterar:\n1. Nome da disciplina\n2. Nome do docente");
+      printf("Disicplina que escolhemos: %s\n", l_disciplinas->nome);
+      printf("Escolha o dado que deseja alterar:\n1. Nome da l_disciplinas\n2. Nome do docente\n");
+      printf("Opcao: ");
       scanf("%d", &opcao);
       switch (opcao) {
         case 1:
-          novaDisciplina->nome = (*char)malloc(50*sizeof(char));
+          l_disciplinas->nome = (char*)malloc(50*sizeof(char));
           printf("Nova disciplina: ");
-          scanf("%s", novaDisciplina->nome);
+          scanf("%s", l_disciplinas->nome);
           break;
 
         case 2:
-          disciplina->docente = (*char)malloc(50*sizeof(char));
+          l_disciplinas->docente = (char*)malloc(50*sizeof(char));
           printf("Novo docente: ");
-          scanf("%s", novaDisciplina->docente);
+          scanf("%s", l_disciplinas->docente);
           break;
       }
+      update_ficheiro_disciplinas(lista_disciplinas);
     }
 
 
