@@ -15,11 +15,12 @@ Problemas que precisam de ser resolvidos:
 quando queremos apagar o último da lista ela não funciona
 
 Funcs que ainda não foram mexidas so far:
-- func6
-- func8
 - func9
 
 Mudança por causa da lista de salas:
 - funcao3 para criar exame
 - funcao5 listar exames
 - le_ficheiro_exames
+
+Funcoes que ainda nao estao arranjadas no que toca á escrita nos ficheiros:
+- func5, 6, 7, 8.
