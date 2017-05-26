@@ -1,9 +1,8 @@
-//nova versao de teste da func3. a atribuição da sala não funciona. e a inscricao do aluno na lista de inscritos tao nao, da segmentation fault
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "header.h"
-
+//TODINHA A FUNCIONAR, INCLUSIVE A ESCRITA DA INFORMACAO NSO EXAMES
 Next_sala cria_lista_salas() {
   Next_sala aux = (Next_sala)malloc(sizeof(Node_sala));
   if (aux != NULL) {
@@ -288,6 +287,26 @@ void insere_sala(char *sala, Next_exame lista_exames, Next_exame exame) {
 
   update_ficheiro_salas(lista_exames);
 }
+
+void escreve_ficheiro_exames(Next_exame lista_exames, Next_exame novoExame) {
+  Next_ptrs_aluno l_inscritos;
+  Next_exame l_exames = lista_exames;
+  FILE *fp = fopen("ficheiro_exames.txt", "a");
+  char *string;
+
+  printf("entra no escreve fich\n");
+  fprintf(fp, "%d,%s,%s,%d,%d,%d,%d,%d,%d", novoExame->id, novoExame->disciplina->nome, novoExame->epoca, novoExame->data.dia, novoExame->data.mes, novoExame->data.ano, novoExame->hora.horas, novoExame->hora.mins, novoExame->duracao);
+
+  l_inscritos = novoExame->inscritos;
+  while(l_inscritos->next != NULL) {
+    printf("Aluno inscrito: %d\n", l_inscritos->next->aluno->num_aluno);
+    fprintf(fp, ",%d", l_inscritos->next->aluno->num_aluno);
+    l_inscritos = l_inscritos->next;
+  }
+  fprintf(fp, "\n");
+  fclose(fp);
+}
+
 void cria_exame(Next_exame lista_exames, Next_aluno lista_alunos, Next_disciplina lista_disciplinas) {
     char *p_epoca, string[30];
     int res, i, num;
@@ -344,6 +363,7 @@ void cria_exame(Next_exame lista_exames, Next_aluno lista_alunos, Next_disciplin
     }
     printf("Vai inserir a sala %s no exame %d\n", string, exame->id);
     insere_sala(string, lista_exames, exame);
+    //escreve_ficheiro_salas(exame);
 
     getchar();
     exame->inscritos = cria_lista_inscritos();
@@ -360,6 +380,8 @@ void cria_exame(Next_exame lista_exames, Next_aluno lista_alunos, Next_disciplin
       l_inscritos = l_inscritos->next;
     }
     insere_exame(lista_exames, exame);
+    escreve_ficheiro_exames(lista_exames, exame);
+    update_ficheiro_salas(lista_exames); // de cada vez q e inserida uma nova sala o fich_salas tem que atualizar
 }
 
 //acho que que o le_ficheiro_inscricoes esta mal
@@ -389,10 +411,9 @@ void le_ficheiro_disciplinas (Next_disciplina lista_disciplinas) {
 }
 
  void le_ficheiro_alunos(Next_aluno lista_alunos) {
-  FILE * fp;
+  FILE *fp;
   Next_aluno novoAluno;
-  int i, id, num_exame;
-  Next_ptrs_exame lista_inscricoes, l_inscricoes;
+  int i;
   fp = fopen("ficheiro_alunos.txt", "r");
   char num[100], c, string[200], s[2] = ",", *exame;
 
