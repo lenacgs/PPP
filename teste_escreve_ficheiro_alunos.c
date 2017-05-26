@@ -85,7 +85,7 @@ void imprime_exames(Next_exame lista_exames) {
 
   l_exames = lista_exames->next;
   while(l_exames != NULL) {
-    printf("%d. Id: %d, %s, %s\n", i, l_exames->id, l_exames->disciplina->nome, l_exames->epoca);
+    printf("Id: %d, %s, %s\n", l_exames->id, l_exames->disciplina->nome, l_exames->epoca);
     l_exames = l_exames->next;
     i++;
   }
@@ -343,13 +343,14 @@ void le_ficheiro_inscricoes(Next_aluno lista_alunos, Next_exame lista_exames) {
 void associa_exame(Next_ptrs_exame lista_ptrs, Next_exame lista_exames) {
   Next_ptrs_exame new_node, l_inscricoes = lista_ptrs;
   Next_exame l_exames = lista_exames->next;
-  int num, i;
+  int id, i;
 
   printf("Selecione o exame em que pretende inscrever o aluno:\n");
   imprime_exames(lista_exames);
-  printf("Opcao: ");
-  scanf("%d", &num);
-  for (i=1; i<num; i++) {
+  printf("Id do exame: ");
+  scanf("%d", &id);
+  l_exames = lista_exames->next;
+  while (l_exames->id != id) {
     l_exames = l_exames->next;
   }
 
@@ -383,12 +384,10 @@ void escreve_ficheiro_alunos(Next_aluno lista_alunos, Next_aluno novoAluno) {
 }
 
 void criar_aluno(Next_aluno lista_alunos, Next_exame lista_exames) {
-    char *p_curso, *p_regime, string [30];
-    int len, i, opcao;
+    int opcao, i;
     Next_aluno novoAluno, l_alunos = lista_alunos;
     Next_ptrs_exame l_inscricoes;
 
-    printf("Aluno %d:\n", i);
     novoAluno = (Next_aluno)malloc(sizeof(Node_aluno));
 
     novoAluno->num_aluno = (int)malloc(30 * sizeof(int));
