@@ -1,5 +1,4 @@
-//ja acabada so falta mudar a escolha do exame. devia ser por id e não por numero pelo qual é listado
-
+//TUDINHO A FUNCIONAR, ESCOLHE O EXAME PELO ID
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -42,7 +41,7 @@ Next_exame cria_lista_exames() {
       aux->hora.horas = 0;
       aux->hora.mins = 0;
       aux->duracao = 0;
-      aux->sala = NULL;
+      aux->salas = NULL;
       aux->inscritos = NULL;
       aux->next = NULL;
     }
@@ -94,6 +93,16 @@ Next_ptrs_exame cria_lista_inscricoes() {
     aux->next = NULL;
   }
   return aux;
+}
+
+void imprime_exames(Next_exame lista_exames) {
+  Next_exame l_exames;
+
+  l_exames = lista_exames->next;
+  while(l_exames != NULL) {
+    printf("Id: %d, %s, %s\n", l_exames->id, l_exames->disciplina->nome, l_exames->epoca);
+    l_exames = l_exames->next;
+  }
 }
 
 void le_ficheiro_disciplinas (Next_disciplina lista_disciplinas) {
@@ -307,33 +316,27 @@ void le_ficheiro_inscricoes(Next_aluno lista_alunos, Next_exame lista_exames) {
 }
 
 void listar_alunos(Next_exame lista_exames) {
-  Next_exame l_exames = lista_exames->next; //por causa do cabeçalho
-  Next_ptrs_aluno inscritos;
+  Next_exame l_exames; //por causa do cabeçalho
+  Next_ptrs_aluno l_inscritos;
   char *ptr, c;
-  int i=1, num;
+  int i=1, id;
   printf("Seleccione o exame do qual quer listar os alunos: \n");
-  while (l_exames) {
-    printf("%d. Id: %d, ", i, l_exames->id);
-    printf("%s ", l_exames->disciplina->nome);
-    printf("%s\n", l_exames->epoca);
-    l_exames = l_exames->next;
-    i++;
-  }
+  imprime_exames(lista_exames);
 
-  l_exames = lista_exames;
-  printf("\nOpcao: ");
-  scanf("%d", &num);
-  for (i=0; i<num; i++) {
+  l_exames = lista_exames->next;
+  printf("Id do exame que deseja: ");
+  scanf("%d", &id);
+  while(l_exames->id != id) {
     l_exames = l_exames->next;
   }
-  printf("Exame me que estamos: %d\n", l_exames->id);
 
+  printf("Id do exame me que estamos: %d\n", l_exames->id);
   printf("Alunos inscritos no exame:\n");
-  inscritos = l_exames->inscritos->next;
-  while (inscritos != NULL) {
-    printf("%d. %d\n", i, inscritos->aluno->num_aluno);
+  l_inscritos = l_exames->inscritos->next;
+  while (l_inscritos != NULL) {
+    printf("%d. %d\n", i, l_inscritos->aluno->num_aluno);
     i++;
-    inscritos = inscritos->next;
+    l_inscritos = l_inscritos->next;
   }
 }
 
@@ -381,14 +384,14 @@ int main() {
   le_ficheiro_disciplinas(lista_disciplinas);
   printf("Lista disciplinas:\n");
   imprime_disciplinas(lista_disciplinas);
-  le_ficheiro_alunos(lista_alunos, lista_exames);
+  le_ficheiro_alunos(lista_alunos);
   printf("Lista alunos:\n");
   imprime_num_aluno(lista_alunos);
   le_ficheiro_exames(lista_exames, lista_disciplinas, lista_alunos);
   le_ficheiro_inscricoes(lista_alunos, lista_exames);
   printf("Lista exames:\n");
   imprime_id_exames(lista_exames);
-  
+
   printf("Alunos inscritos no exame:\n");
   listar_alunos(lista_exames);
 }
