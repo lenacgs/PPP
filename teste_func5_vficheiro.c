@@ -1,4 +1,4 @@
-//ja acabada so falta mudar a escolha do exame. devia ser por id e não por numero pelo qual é listado
+//TODINHA A FUNCIONAR, A ESCOLHA DO EXAME JA E FEITA PELO ID
 
 #include <stdio.h>
 #include <stdlib.h>
