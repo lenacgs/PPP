@@ -35,7 +35,7 @@ void alterar_dados_aluno(Next_aluno lista_alunos) {
     case 4: {
       l_alunos->regime = (char*)malloc(50*sizeof(char));
       printf("Novo regime: ");
-      scanf("%s", l_alunos->regime);
+      opcao_regime(l_alunos);
       break;
     }
   }
