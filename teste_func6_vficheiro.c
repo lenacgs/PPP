@@ -442,7 +442,7 @@ void update_ficheiro_exames(Next_exame lista_exames) {
   }
 }
 
-int verifica_epoca_especial(Next_exame l_exames, Next_aluno l_alunos) {
+int verifica_estatuto(Next_exame l_exames, Next_aluno l_alunos) {
   if (strcmp(l_alunos->regime, "Estudante") == 0) {
     if (l_alunos->ano_mat != 3)
       return -1;
@@ -484,7 +484,7 @@ void inscreve_desinscreve_aluno(Next_exame lista_exames, Next_aluno lista_alunos
           l_exames = l_exames->next;
         }
         if (strcmp(l_exames->epoca, "Especial") == 0) {
-          res = verifica_epoca_especial(l_exames, l_alunos);
+          res = verifica_estatuto(l_exames, l_alunos);
         }
         while (res == -1) {
           printf("O aluno que quer inscrever nao tem estatudo para optra por uma exame de epoca especial.\n");
@@ -498,7 +498,7 @@ void inscreve_desinscreve_aluno(Next_exame lista_exames, Next_aluno lista_alunos
           }
 
           if (strcmp(l_exames->epoca, "Especial") == 0) {
-            res = verifica_epoca_especial(l_exames, l_alunos);
+            res = verifica_estatuto(l_exames, l_alunos);
           }
           else {
             res = 1;
