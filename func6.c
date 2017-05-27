@@ -1,10 +1,10 @@
-//TUDINHO A FUNCIONAR, ESCREVE NO FICHEIRO E ESCOLHE O EXME PELO ID
+//TUDINHO A FUNCIONAR, ESCREVE NO FICHEIRO E ESCOLHE O EXME PELO ID. JA FAZ A CENA DA EPOCA ESPECIAL
 
 void inscreve_desinscreve_aluno(Next_exame lista_exames, Next_aluno lista_alunos) {
   Next_exame l_exames = lista_exames;
   Next_aluno l_alunos, last_aluno;
   Next_ptrs_aluno l_inscritos, new_node, actual, ant;
-  int n_exames, n_alunos, i, id_aluno, id, opcao, tag;
+  int n_exames, n_alunos, i, id_aluno, id, opcao, tag, res;
 
   printf("O que deseja?\n1. Inscrever aluno\n2. Desinscrever aluno\nOpcao: ");
   scanf("%d", &opcao);
@@ -23,13 +23,35 @@ void inscreve_desinscreve_aluno(Next_exame lista_exames, Next_aluno lista_alunos
       scanf("%d", &n_exames);
       for (i=0; i<n_exames; i++) {
         printf("Seleccione o exame em que pretende inscrever o aluno: \n");
-        imprime_id_exames(lista_exames);
+        imprime_exames(lista_exames);
         printf("Id do exame que deseja: ");
         scanf("%d", &id);
         l_exames = lista_exames->next;
         while(l_exames->id != id) {
           l_exames = l_exames->next;
         }
+        if (strcmp(l_exames->epoca, "Especial") == 0) {
+          res = verifica_epoca_especial(l_exames, l_alunos);
+        }
+        while (res == -1) {
+          printf("O aluno que quer inscrever nao tem estatudo para optra por uma exame de epoca especial.\n");
+          printf("Seleccione outro exame para inscrever o aluno: \n");
+          imprime_exames(lista_exames);
+          printf("Id do exame que deseja: ");
+          scanf("%d", &id);
+          l_exames = lista_exames->next;
+          while(l_exames->id != id) {
+            l_exames = l_exames->next;
+          }
+
+          if (strcmp(l_exames->epoca, "Especial") == 0) {
+            res = verifica_epoca_especial(l_exames, l_alunos);
+          }
+          else {
+            res = 1;
+          }
+        }
+
 
         l_inscritos = l_exames->inscritos;
         tag = 0;
@@ -84,7 +106,6 @@ void inscreve_desinscreve_aluno(Next_exame lista_exames, Next_aluno lista_alunos
         while(l_exames->id != id) {
           l_exames = l_exames->next;
         }
-        printf("Id do exame em que estamos: %d\n", l_exames->id);
 
         tag = 0;
         l_inscritos = l_exames->inscritos;
@@ -111,3 +132,4 @@ void inscreve_desinscreve_aluno(Next_exame lista_exames, Next_aluno lista_alunos
   }
   update_ficheiro_exames(lista_exames);
 }
+
