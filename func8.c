@@ -1,5 +1,4 @@
-//8 - Listar exames em que um aluno está inscrito
-
+//8 - Listar exames em que um aluno está inscrito. TUDINHO A FUNCIONAR
 void listar_inscricoes_alunos (Next_aluno lista_alunos) {
   int i, opcao;
   Next_aluno l_alunos = lista_alunos;
