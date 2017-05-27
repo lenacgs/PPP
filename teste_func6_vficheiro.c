@@ -1,8 +1,17 @@
-
+//TODINHO A FUNCIONAR, ESCREVE NO FICHEIRO E ESCOLHE OS EXAMES PELO ID
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "header.h"
+
+Next_sala cria_lista_salas() {
+  Next_sala aux = (Next_sala)malloc(sizeof(Node_sala));
+  if (aux != NULL) {
+    aux->sala = NULL;
+    aux->next = NULL;
+  }
+  return aux;
+}
 
 Next_ptrs_exame cria_lista_inscricoes() {
   Next_ptrs_exame aux = (Next_ptrs_exame)malloc(sizeof(Node_ptrs_exame));
@@ -151,7 +160,6 @@ void imprime_id_exames(Next_exame lista) {
 /*int verifica_sala(char *string, Next_exame lista_exames, Next_exame new_node) {
   int inicio, fim, inicio_nova, fim_nova, res;
   Next_exame l = lista_exames->next;
-
   while (l->next != NULL) {
     inicio = (l->hora.horas)* 60 + (l->hora.mins);
     fim = inicio + l->duracao;
@@ -295,11 +303,6 @@ void le_ficheiro_exames(Next_exame lista_exames, Next_disciplina lista_disciplin
     fseek(fp, 1, SEEK_CUR);
     printf("DURACAO: %d\n", novoExame->duracao);
 
-    /*novoExame->sala = (char*)malloc(50*sizeof(char));
-    fscanf(fp, "%[^,\n]", id);
-    fscanf(fp, "%[^,\n]", novoExame->sala);
-    printf("SALA: %s\n", novoExame->sala);
-    fseek(fp, 1, SEEK_CUR);*/
 
     novoExame->inscritos = cria_lista_inscritos();
     l_inscritos = novoExame->inscritos;
@@ -382,11 +385,69 @@ void le_ficheiro_inscricoes(Next_aluno lista_alunos, Next_exame lista_exames) {
   }
 }
 
+void le_ficheiro_salas(Next_exame lista_exames) {
+  FILE *fp = fopen("ficheiro_salas.txt", "r");
+  char id[100], *sala, string[100], s[2] = ",";
+  int id_exame;
+  Next_exame l_exames = lista_exames->next;
+  Next_sala novaSala, l_salas;
+
+  printf("LEITURA DA LISTA DE SALAS:\n");
+  while (fscanf(fp, " %[^,]", id) != EOF) { //enquanto existirem linhas no ficheiro_salas, guarda o id de 1 linha para a variavel "id"
+    id_exame = atoi(id);
+    fseek(fp, 1, SEEK_CUR); //sala uma virgula
+    while (l_exames->id != id_exame) {
+      l_exames = l_exames->next;
+    }
+    //l_exames é um ponteiro para o node_exame que tem o id que procuramos
+    printf("Exame em que estamos: %d\n", l_exames->id);
+    l_exames->salas = cria_lista_salas();
+    l_salas = l_exames->salas;
+    fscanf(fp, " %[^\n]", string);
+
+    sala = (char*)malloc(100*sizeof(char));
+
+    sala = strtok(string, s); //retorna NULL quando já não é possivel tokenizar mais string
+    while (sala != NULL) {
+      while(l_salas->next != NULL) {
+        l_salas = l_salas->next;
+      }
+      l_salas->next = (Next_sala)malloc(sizeof(Node_sala));
+      l_salas->next->sala = (char*)malloc(100*sizeof(char));
+      strcpy(l_salas->next->sala, sala);
+      printf("Sala inserida: %s\n", l_salas->next->sala);
+      l_salas->next->next = NULL;
+      sala = strtok(NULL, s);
+    }
+  }
+  fclose(fp);
+  printf("Leitura da lista de salas concluída.\n");
+}
+
+void update_ficheiro_exames(Next_exame lista_exames) {
+  Next_exame l_exames = lista_exames->next;
+  Next_ptrs_aluno l_inscritos;
+  FILE *fp = fopen("ficheiro_exames.txt", "w");
+  while (l_exames != NULL) {
+    printf("Estamos no exame: %d\n", l_exames->id);
+    fprintf(fp, "%d,%s,%s,%d,%d,%d,%d,%d,%d", l_exames->id, l_exames->disciplina->nome,  l_exames->epoca,  l_exames->data.dia, l_exames->data.mes, l_exames->data.ano, l_exames->hora.horas, l_exames->hora.mins, l_exames->duracao);
+
+    l_inscritos = l_exames->inscritos->next;
+    while (l_inscritos != NULL) {
+      printf("Aluno: %d\n", l_inscritos->aluno->num_aluno);
+      fprintf(fp, ",%d", l_inscritos->aluno->num_aluno);
+      l_inscritos = l_inscritos->next;
+    }
+    fprintf(fp, "\n");
+    l_exames = l_exames->next;
+  }
+}
+
 void inscreve_desinscreve_aluno(Next_exame lista_exames, Next_aluno lista_alunos) {
   Next_exame l_exames = lista_exames;
   Next_aluno l_alunos, last_aluno;
   Next_ptrs_aluno l_inscritos, new_node, actual, ant;
-  int n_exames, n_alunos, i, id_aluno, opcao, tag;
+  int n_exames, n_alunos, i, id_aluno, id, opcao, tag;
 
   printf("O que deseja?\n1. Inscrever aluno\n2. Desinscrever aluno\nOpcao: ");
   scanf("%d", &opcao);
@@ -406,15 +467,13 @@ void inscreve_desinscreve_aluno(Next_exame lista_exames, Next_aluno lista_alunos
       for (i=0; i<n_exames; i++) {
         printf("Seleccione o exame em que pretende inscrever o aluno: \n");
         imprime_id_exames(lista_exames);
-        printf("Opcao: ");
-        scanf("%d", &opcao);
-        l_exames = lista_exames;
-        for(i=0; i<opcao; i++) {
-          l_exames = l_exames->next; //vai para o exame certo
+        printf("Id do exame que deseja: ");
+        scanf("%d", &id);
+        l_exames = lista_exames->next;
+        while(l_exames->id != id) {
+          l_exames = l_exames->next;
         }
 
-        //PROBLEMA: TEMOS QUE VERIFICAR PRIMEIRO SE O ALUNO QUE ELE QUER INSCREVER JÁ NÃO SE ENCONTRA NA LISTA DE INSCRITOS DESSE EXAME
-        printf("Id do exame em q estamos: %d\n", l_exames->id);
         l_inscritos = l_exames->inscritos;
         tag = 0;
         while (l_inscritos->next != NULL) {
@@ -462,10 +521,10 @@ void inscreve_desinscreve_aluno(Next_exame lista_exames, Next_aluno lista_alunos
       for (i=0; i<n_exames; i++) {
         printf("Seleccione o exame de que pretende desinscrever o aluno: \n");
         imprime_id_exames(lista_exames);
-        printf("Opcao: ");
-        scanf("%d", &opcao);
-        l_exames = lista_exames;
-        for(i=0; i<opcao; i++) {
+        printf("Id do exame que deseja: ");
+        scanf("%d", &id);
+        l_exames = lista_exames->next;
+        while(l_exames->id != id) {
           l_exames = l_exames->next;
         }
         printf("Id do exame em que estamos: %d\n", l_exames->id);
@@ -489,10 +548,11 @@ void inscreve_desinscreve_aluno(Next_exame lista_exames, Next_aluno lista_alunos
           }
         }
         if (tag == 0)
-          printf("Este aluno nao se encontra inscrito no exame de id %d\n.", l_exames->id);
+          printf("Este aluno nao se encontra inscrito no exame de id: %d.\n", l_exames->id);
     }
     tag = 0;
   }
+  update_ficheiro_exames(lista_exames);
 }
 
 
