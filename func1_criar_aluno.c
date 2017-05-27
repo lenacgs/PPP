@@ -1,15 +1,23 @@
-void criar_aluno(Next_aluno lista_alunos, Next_exame lista_exames) {
+//JA TEM A OPCAO DO REGIME RESOLVIDA
+void cria_aluno(Next_aluno lista_alunos, Next_exame lista_exames) {
     char *p_curso, *p_regime, string [30];
-    int len, i, opcao;
-    Next_aluno novoAluno, l_alunos = lista_alunos;
+    int len, i, opcao, num_aluno, res;
+    Next_aluno novoAluno, l_alunos = lista_alunos->next;
     Next_ptrs_exame l_inscricoes;
 
-    printf("Aluno %d:\n", i);
     novoAluno = (Next_aluno)malloc(sizeof(Node_aluno));
 
     novoAluno->num_aluno = (int)malloc(30 * sizeof(int));
     printf("Numero: ");
-    scanf("%d", &(novoAluno->num_aluno)); /*certo*/
+    scanf("%d", &num_aluno); /*certo*/
+
+    res = prot_num_aluno(num_aluno, lista_alunos);
+    while (res == -1) {
+      printf("O numero de aluno que introduziu ja existe. Por favor insira outro numero: ");
+      scanf("%d", &num_aluno);
+      res = prot_num_aluno(num_aluno, lista_alunos);
+    }
+    novoAluno->num_aluno = num_aluno;
 
     novoAluno->curso = (char*)malloc(50*sizeof(char));
     printf("Curso: ");
@@ -20,7 +28,7 @@ void criar_aluno(Next_aluno lista_alunos, Next_exame lista_exames) {
 
     novoAluno->regime = (char*)malloc(50*sizeof(int));
     printf("Regime: ");
-    scanf("%s", novoAluno->regime);
+    opcao_regime(novoAluno);
 
     novoAluno->inscricoes = cria_lista_inscricoes();
     l_inscricoes = novoAluno->inscricoes;
@@ -39,5 +47,4 @@ void criar_aluno(Next_aluno lista_alunos, Next_exame lista_exames) {
     }
     insere_aluno(lista_alunos, novoAluno);
     escreve_ficheiro_alunos(lista_alunos, novoAluno);
-
 }
