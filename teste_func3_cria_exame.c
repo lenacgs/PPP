@@ -323,7 +323,84 @@ void escreve_ficheiro_exames(Next_exame lista_exames, Next_exame novoExame) {
   fprintf(fp, "\n");
   fclose(fp);
 }
+int prot_id(int id, Next_exame lista_exames) {
+  Next_exame l_exames = lista_exames->next;
 
+  while (l_exames != NULL) {
+    if (l_exames ->id == id) {
+      return -1;
+    }
+    l_exames = l_exames->next;
+  }
+  return 0;
+}
+void escreve_ficheiro_disciplinas(Next_disciplina lista_disciplinas, Next_disciplina novaDisciplina) {
+  Next_disciplina l_disciplinas = lista_disciplinas;
+  FILE *fp = fopen("ficheiro_disciplinas.txt", "a");
+  char *string;
+
+  fprintf(fp, "%s,%s", novaDisciplina->nome, novaDisciplina->docente);
+
+  fprintf(fp, "\n");
+  fclose(fp);
+}
+void cria_disciplina(Next_disciplina lista_disciplinas) {
+    Next_disciplina novaDisciplina;
+    int n, i;
+
+    printf("Quantas disciplinas quer criar? ");
+    scanf("%d", &n);
+    for(i=1; i<=n;i++) {
+      printf("Disciplina %d:\n", i);
+      novaDisciplina = (Next_disciplina)malloc(sizeof(Node_disciplina));
+
+      novaDisciplina->nome = (char*)malloc(50*sizeof(char));
+      printf("Nome da disciplina: ");
+      scanf("%s", novaDisciplina->nome);
+
+      novaDisciplina->docente = (char*)malloc(50*sizeof(int));
+      printf("Nome do docente: ");
+      scanf("%s", novaDisciplina->docente);
+
+      insere_disciplina(lista_disciplinas, novaDisciplina);
+      escreve_ficheiro_disciplinas(lista_disciplinas, novaDisciplina);
+    }
+}
+
+void prot_disciplina(char *string, Next_disciplina lista_disciplinas) {
+  Next_disciplina l_disciplinas = lista_disciplinas->next;
+  int x, res=0;
+
+  printf("%s, %s\n", l_disciplinas->next->next->next->nome, l_disciplinas->next->next->next->docente);
+
+  while (l_disciplinas != NULL) {
+    if (strcmp(l_disciplinas->nome, string) == 0) {
+      res = 0;
+      break;
+    }
+    else {
+      res = -1;
+      l_disciplinas = l_disciplinas->next;
+    }
+  }
+
+  while (res == -1) {
+    printf("A disciplina que introduziu ainda nao existe na lista de disciplinas.\nQuer:\n1.Criar disciplina com o nome inserido\n2.Escolher outra disciplina\n");
+    scanf("%d", &x);
+
+    switch(x) {
+      case 1:
+        cria_disciplina(lista_disciplinas);
+        res = 0;
+        break;
+      case 2:
+        printf("Disciplina: ");
+        scanf("%s", string);
+        return prot_disciplina(string, lista_disciplinas);
+        break;
+    }
+  }
+}
 void cria_exame(Next_exame lista_exames, Next_aluno lista_alunos, Next_disciplina lista_disciplinas) {
     char *p_epoca, string[30];
     int res, i, num, id;
@@ -333,13 +410,20 @@ void cria_exame(Next_exame lista_exames, Next_aluno lista_alunos, Next_disciplin
     exame = (Next_exame)malloc(sizeof(Node_exame));
 
     printf("ID: ");
-    scanf("%d", &(exame->id);
-    //prot_id(id, lista_exames);
+    scanf("%d", &id);
+    res = prot_id(id, lista_exames);
+    while (res == -1) {
+      printf("O ID inserido já existe. Introduza um novo ID: ");
+      scanf("%d", &id);
+      res = prot_id(id, lista_exames);
+    }
 
 
     exame->disciplina = (Next_disciplina)malloc(sizeof(Node_disciplina));
     printf("Disciplina: ");
     scanf("%s", string);
+
+    prot_disciplina(string, lista_disciplinas);
 
     while (l_disciplinas != NULL) {
       if (strcmp(l_disciplinas->nome, string) == 0) {
