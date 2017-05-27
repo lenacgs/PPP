@@ -287,7 +287,24 @@ void insere_sala(char *sala, Next_exame lista_exames, Next_exame exame) {
 
   update_ficheiro_salas(lista_exames);
 }
+void opcao_epoca(Next_exame exame) {
+  int x;
 
+  printf("Epocas possiveis:\n1.Epoca normal\n2.Epoca de recurso\n3.Epoca especial\nSeleccione a epoca pretendida: ");
+  scanf("%d", &x);
+
+  switch (x) {
+    case 1:
+      exame->epoca = "Normal";
+      break;
+    case 2:
+      exame->epoca = "Recurso";
+      break;
+    case 3:
+      exame->epoca = "Especial";
+      break;
+  }
+}
 void escreve_ficheiro_exames(Next_exame lista_exames, Next_exame novoExame) {
   Next_ptrs_aluno l_inscritos;
   Next_exame l_exames = lista_exames;
@@ -309,15 +326,16 @@ void escreve_ficheiro_exames(Next_exame lista_exames, Next_exame novoExame) {
 
 void cria_exame(Next_exame lista_exames, Next_aluno lista_alunos, Next_disciplina lista_disciplinas) {
     char *p_epoca, string[30];
-    int res, i, num;
+    int res, i, num, id;
     Next_ptrs_aluno l_inscritos;
     Next_disciplina l_disciplinas = lista_disciplinas->next; /*este next e super importante*/
     Next_exame exame, l_exames = lista_exames->next;
     exame = (Next_exame)malloc(sizeof(Node_exame));
 
     printf("ID: ");
-    scanf("%d", &(exame->id));
-    //escreve_fi
+    scanf("%d", &(exame->id);
+    //prot_id(id, lista_exames);
+
 
     exame->disciplina = (Next_disciplina)malloc(sizeof(Node_disciplina));
     printf("Disciplina: ");
@@ -332,7 +350,7 @@ void cria_exame(Next_exame lista_exames, Next_aluno lista_alunos, Next_disciplin
 
     exame->epoca = (char*)malloc(50*sizeof(char));
     printf("Epoca: ");
-    scanf("%s", exame->epoca);
+    opcao_epoca(exame);
 
     printf("Data: \nDia: ");
     scanf("%d", &(exame->data.dia));
