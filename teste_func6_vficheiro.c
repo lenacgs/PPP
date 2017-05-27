@@ -1,4 +1,4 @@
-//TODINHO A FUNCIONAR, ESCREVE NO FICHEIRO E ESCOLHE OS EXAMES PELO ID
+//TODINHO A FUNCIONAR, ESCREVE NO FICHEIRO E ESCOLHE OS EXAMES PELO ID. JA VERIFICA A HIPOTESE DE EPOCA ESPECIAL.
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -136,14 +136,13 @@ void imprime_disciplinas(Next_disciplina lista) {
   }
 }
 
-void imprime_exames(Next_exame lista) {
-  Next_exame l;
+void imprime_exames(Next_exame lista_exames) {
+  Next_exame l_exames;
 
-  l = lista->next;
-  while(l != NULL) {
-    printf("\nnome: %s", l->disciplina->nome);
-    printf("\nepoca: %s", l->epoca);
-    l = l->next;
+  l_exames = lista_exames->next;
+  while(l_exames != NULL) {
+    printf("Id: %d, %s, %s\n", l_exames->id, l_exames->disciplina->nome, l_exames->epoca);
+    l_exames = l_exames->next;
   }
 }
 
@@ -443,11 +442,22 @@ void update_ficheiro_exames(Next_exame lista_exames) {
   }
 }
 
+int verifica_epoca_especial(Next_exame l_exames, Next_aluno l_alunos) {
+  if (strcmp(l_alunos->regime, "Estudante") == 0) {
+    if (l_alunos->ano_mat != 3)
+      return -1;
+    else
+      return 1;
+  }
+  else
+    return 1;
+}
+
 void inscreve_desinscreve_aluno(Next_exame lista_exames, Next_aluno lista_alunos) {
   Next_exame l_exames = lista_exames;
   Next_aluno l_alunos, last_aluno;
   Next_ptrs_aluno l_inscritos, new_node, actual, ant;
-  int n_exames, n_alunos, i, id_aluno, id, opcao, tag;
+  int n_exames, n_alunos, i, id_aluno, id, opcao, tag, res;
 
   printf("O que deseja?\n1. Inscrever aluno\n2. Desinscrever aluno\nOpcao: ");
   scanf("%d", &opcao);
@@ -466,13 +476,35 @@ void inscreve_desinscreve_aluno(Next_exame lista_exames, Next_aluno lista_alunos
       scanf("%d", &n_exames);
       for (i=0; i<n_exames; i++) {
         printf("Seleccione o exame em que pretende inscrever o aluno: \n");
-        imprime_id_exames(lista_exames);
+        imprime_exames(lista_exames);
         printf("Id do exame que deseja: ");
         scanf("%d", &id);
         l_exames = lista_exames->next;
         while(l_exames->id != id) {
           l_exames = l_exames->next;
         }
+        if (strcmp(l_exames->epoca, "Especial") == 0) {
+          res = verifica_epoca_especial(l_exames, l_alunos);
+        }
+        while (res == -1) {
+          printf("O aluno que quer inscrever nao tem estatudo para optra por uma exame de epoca especial.\n");
+          printf("Seleccione outro exame para inscrever o aluno: \n");
+          imprime_exames(lista_exames);
+          printf("Id do exame que deseja: ");
+          scanf("%d", &id);
+          l_exames = lista_exames->next;
+          while(l_exames->id != id) {
+            l_exames = l_exames->next;
+          }
+
+          if (strcmp(l_exames->epoca, "Especial") == 0) {
+            res = verifica_epoca_especial(l_exames, l_alunos);
+          }
+          else {
+            res = 1;
+          }
+        }
+
 
         l_inscritos = l_exames->inscritos;
         tag = 0;
@@ -527,7 +559,6 @@ void inscreve_desinscreve_aluno(Next_exame lista_exames, Next_aluno lista_alunos
         while(l_exames->id != id) {
           l_exames = l_exames->next;
         }
-        printf("Id do exame em que estamos: %d\n", l_exames->id);
 
         tag = 0;
         l_inscritos = l_exames->inscritos;
