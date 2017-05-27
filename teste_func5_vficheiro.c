@@ -5,6 +5,15 @@
 #include <string.h>
 #include "header.h"
 
+Next_sala cria_lista_salas() {
+  Next_sala aux = (Next_sala)malloc(sizeof(Node_sala));
+  if (aux != NULL) {
+    aux->sala = NULL;
+    aux->next = NULL;
+  }
+  return aux;
+}
+
 Next_disciplina cria_lista_disciplinas() {
     Next_disciplina aux;
     aux = (Next_disciplina)malloc(sizeof(Node_disciplina));
@@ -42,7 +51,7 @@ Next_exame cria_lista_exames() {
       aux->hora.horas = 0;
       aux->hora.mins = 0;
       aux->duracao = 0;
-      aux->sala = NULL;
+      aux->salas = NULL;
       aux->inscritos = NULL;
       aux->next = NULL;
     }
@@ -306,60 +315,108 @@ void le_ficheiro_inscricoes(Next_aluno lista_alunos, Next_exame lista_exames) {
   fclose(fp);
 }
 
-void imprimir_exames(Next_exame lista) {
-  Next_exame l, ant, actual;
-  int i=1, c;
-  char *ptr, *disc, *ep, *doc;
-  Next_ptrs_aluno inscritos;
+void le_ficheiro_salas(Next_exame lista_exames) {
+  FILE *fp = fopen("ficheiro_salas.txt", "r");
+  char id[100], *sala, string[100], s[2] = ",";
+  int id_exame;
+  Next_exame l_exames = lista_exames->next;
+  Next_sala novaSala, l_salas;
 
-  l = lista->next;
+  printf("LEITURA DA LISTA DE SALAS:\n");
+  while (fscanf(fp, " %[^,]", id) != EOF) { //enquanto existirem linhas no ficheiro_salas, guarda o id de 1 linha para a variavel "id"
+    id_exame = atoi(id);
+    fseek(fp, 1, SEEK_CUR); //sala uma virgula
+    while (l_exames->id != id_exame) {
+      l_exames = l_exames->next;
+    }
+    //l_exames é um ponteiro para o node_exame que tem o id que procuramos
+    printf("Exame em que estamos: %d\n", l_exames->id);
+    l_exames->salas = cria_lista_salas();
+    l_salas = l_exames->salas;
+    fscanf(fp, " %[^\n]", string);
+
+    sala = (char*)malloc(100*sizeof(char));
+
+    sala = strtok(string, s); //retorna NULL quando já não é possivel tokenizar mais string
+    while (sala != NULL) {
+      while(l_salas->next != NULL) {
+        l_salas = l_salas->next;
+      }
+      l_salas->next = (Next_sala)malloc(sizeof(Node_sala));
+      l_salas->next->sala = (char*)malloc(100*sizeof(char));
+      strcpy(l_salas->next->sala, sala);
+      printf("Sala inserida: %s\n", l_salas->next->sala);
+      l_salas->next->next = NULL;
+      sala = strtok(NULL, s);
+    }
+  }
+  fclose(fp);
+  printf("Leitura da lista de salas concluída.\n");
+}
+
+void imprime_exames(Next_exame lista_exames) {
+  Next_exame l_exames;
+
+  l_exames = lista_exames->next;
+  while(l_exames != NULL) {
+    printf("Id: %d, %s, %s\n", l_exames->id, l_exames->disciplina->nome, l_exames->epoca);
+    l_exames = l_exames->next;
+  }
+}
+
+void listar_exames(Next_exame lista_exames) {
+  Next_exame l_exames;
+  int i=1, id;
+  Next_ptrs_aluno l_inscritos;
+  Next_sala l_salas;
+
+  l_exames = lista_exames->next;
   printf("Lista de exames existentes:\n");
-  while (l) { //lista os exames existentes na lista, juntamente com a epoca
-    printf("%d. %s", i, l->disciplina->nome);
-    i++;
-    printf(", %s\n", l->epoca);
-    l = l->next;
-  }
+  imprime_exames(lista_exames);
+
   /*o exame devia ser identificado pelo id*/
-  printf("\nEscolha o exame: ");
-  scanf("%d", &c);
+  printf("\nEscolha o id do exame: ");
+  scanf("%d", &id);
 
-  l = lista;
-  for (i=1; i<=c; i++) {
-    l = l->next;
-    printf("ciclo:\n");
-    printf("id: %d\n", l->id);
+  l_exames = lista_exames->next;
+  while (l_exames->id != id) {
+    l_exames = l_exames->next;
   }
 
-  printf("Informacao desse exame:\n ");
-  printf("\nDisciplina: ");
-  printf("%s", l->disciplina->nome);
+  printf("Informacao desse exame:\n");
+  printf("Disciplina: ");
+  printf("%s\n", l_exames->disciplina->nome);
 
-  printf("\nDocente: ");
-  printf("%s", l->disciplina->docente);
+  printf("Docente: ");
+  printf("%s\n", l_exames->disciplina->docente);
 
-  printf("\nÉpoca: ");
-  printf("%s", l->epoca);
+  printf("Época: ");
+  printf("%s\n", l_exames->epoca);
 
-  printf("\nData: ");
-  printf("%d - %d - %d", l->data.dia, l->data.mes, l->data.ano);
+  printf("Data: ");
+  printf("%d-%d-%d\n", l_exames->data.dia, l_exames->data.mes, l_exames->data.ano);
 
-  printf("\nHora: ");
-  printf("%dh%d", l->hora.horas, l->hora.mins);
+  printf("Hora: ");
+  printf("%dh%d\n", l_exames->hora.horas, l_exames->hora.mins);
 
-  printf("\nSala: ");
-  printf("%s", l->sala);
+  printf("Salas: \n");
+  l_salas = l_exames->salas->next;
+  while (l_salas != NULL) {
+    printf("Sala %d: %s\n", i, l_salas->sala); //imprime null
+    i++;
+    l_salas = l_salas->next;
+  }
 
-  printf("\nDuração: %d minutos", l->duracao);
+  printf("Duração: %d minutos\n", l_exames->duracao);
 
-  printf("\nAlunos inscritos: \n");
+  printf("Alunos inscritos: \n");
 
   i=1;
-  inscritos = l->inscritos->next;
-  while (inscritos != NULL) {
-    printf("%d. %d\n", i, inscritos->aluno->num_aluno);
+  l_inscritos = l_exames->inscritos->next;
+  while (l_inscritos != NULL) {
+    printf("%d. %d\n", i, l_inscritos->aluno->num_aluno);
     i++;
-    inscritos = inscritos->next;
+    l_inscritos = l_inscritos->next;
   }
 }
 
@@ -407,14 +464,15 @@ int main() {
   le_ficheiro_disciplinas(lista_disciplinas);
   printf("Lista disciplinas:\n");
   imprime_disciplinas(lista_disciplinas);
-  le_ficheiro_alunos(lista_alunos, lista_exames);
+  le_ficheiro_alunos(lista_alunos);
   printf("Lista alunos:\n");
   imprime_num_aluno(lista_alunos);
   le_ficheiro_exames(lista_exames, lista_disciplinas, lista_alunos);
   le_ficheiro_inscricoes(lista_alunos, lista_exames);
   printf("Lista exames:\n");
   imprime_id_exames(lista_exames);
+  le_ficheiro_salas(lista_exames);
 
   printf("Funcao 5:\n");
-  imprimir_exames(lista_exames);
+  listar_exames(lista_exames);
 }
