@@ -15,3 +15,4 @@ void update_ficheiro_exames(Next_exame lista_exames) {
     fprintf(fp, "\n");
     l_exames = l_exames->next;
   }
+}
