@@ -474,7 +474,7 @@ void verificar_salas_suficientes(Next_exame lista_exames) {
   }
   printf("Num de salas: %d\n", num_salas);
 
-  capac_max = num_salas * 2;
+  capac_max = num_salas * 30;
   printf("Capac_max: %d\n", capac_max);
   num_alunos =0;
   l_inscritos = l_exames->inscritos->next;
